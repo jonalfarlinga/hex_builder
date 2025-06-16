@@ -7,8 +7,15 @@ type Interactable interface {
 	Draw(*ebiten.Image)
 }
 
-// func CollideRect(x, y int, button Interactable) bool {
-// 	left, top, right, bottom := button.GetBounds()
-// 	X, Y := float32(x), float32(y)
-// 	return X > left && X < right && Y > top && Y < bottom
-// }
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+func Max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}

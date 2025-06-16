@@ -1,6 +1,10 @@
 package objects
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"hex_builder/common"
+
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type Viewport struct {
 	offsetX, offsetY, scale float64
@@ -9,9 +13,9 @@ type Viewport struct {
 
 func NewViewport() *Viewport {
 	return &Viewport{
-		offsetX: 400, // center of screen
-		offsetY: 300,
-		scale:   60, // size of hexes
+		offsetX: float64(common.ScreenWidth/2),
+		offsetY: float64(common.ScreenHeight/2),
+		scale:   60,
 		stroke:  Stroke{},
 	}
 }
@@ -38,7 +42,7 @@ func (vp *Viewport) Update() {
 func Zoom(scale float64) float64 {
 	_, dy := ebiten.Wheel()
 
-	zoomFactor := 1.1 // ~10% zoom per tick
+	zoomFactor := 1.1
 
 	if dy > 0 {
 		scale *= zoomFactor
@@ -59,41 +63,4 @@ func Pan(oX, oY float64) (float64, float64) {
 	oX += float64(x)
 	oY += float64(y)
 	return oX, oY
-}
-
-type Stroke struct {
-	active bool
-	startX float64
-	startY float64
-	origX  float64
-	origY  float64
-}
-
-func (vp *Viewport) StartPan() {
-	x, y := ebiten.CursorPosition()
-	vp.stroke.active = true
-	vp.stroke.startX = float64(x)
-	vp.stroke.startY = float64(y)
-	vp.stroke.origX = vp.offsetX
-	vp.stroke.origY = vp.offsetY
-}
-func (vp *Viewport) UpdatePan() {
-	if !vp.stroke.active {
-		return
-	}
-	x, y := ebiten.CursorPosition()
-	dx := float64(x) - vp.stroke.startX
-	dy := float64(y) - vp.stroke.startY
-	vp.offsetX = vp.stroke.origX + dx
-	vp.offsetY = vp.stroke.origY + dy
-}
-func (vp *Viewport) EndPan() {
-	vp.stroke.active = false
-}
-
-func (vp *Viewport) WindowPosition() (float64, float64) {
-	return vp.offsetX, vp.offsetY
-}
-func(vp *Viewport) WindowScale() float64 {
-	return vp.scale
 }
