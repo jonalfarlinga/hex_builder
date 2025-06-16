@@ -3,73 +3,56 @@ package objects
 import (
 	"hex_builder/common"
 	"image/color"
-	"math"
-	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
-	"golang.org/x/image/font/basicfont"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-func BuildHexGrid(r float32, hexGrid *[]*HexTile) {
-	dx := 3 * r / 2                 // hex width
-	dy := float32(math.Sqrt(3)) * r // hex height
-	sw := float32(common.ScreenWidth)
-	sh := float32(common.ScreenHeight)
-	cols := int(sw / dx) + 2
-	rows := int(sh / dy) + 2
-	for row := 0; row < rows; row++ {
-		for col := 0; col < cols; col++ {
-			x := float32(col) * dx
-			y := float32(row) * dy
-			if col%2 == 1 {
-				y += dy / 2
-			}
-			*hexGrid = append(
-				*hexGrid,
-				NewHexTile(x, y, r, 2, row, col),
-			)
+type HexGrid struct {
+	Grid map[[2]int]*HexTile
+	Rows int
+	Cols int
+	// R    float64
+}
+
+func NewHexGrid(rows, cols int) *HexGrid {
+	grid := make(map[[2]int]*HexTile)
+
+	for q := -cols / 2; q <= cols/2; q++ {
+		r1 := max(-rows/2, -q-cols/2)
+		r2 := min(rows/2, -q+cols/2)
+		for s := r1; s <= r2; s++ {
+			grid[[2]int{q, s}] = NewHexTile(q, s)
 		}
 	}
-}
 
-func CollideWithGrid(x, y int, grid []*HexTile, r float32, screen *ebiten.Image) *HexTile {
-	q, s := pixelToAxial(float64(x), float64(y), float64(r))
-	text.Draw(
-		screen, strconv.Itoa(q)+strconv.Itoa(s),
-		basicfont.Face7x13, 10, 10, color.White,
-	)
-	for _, hex := range grid {
-		if hex.axialQ == q && hex.axialR == s {
-			return hex
-		}
+	return &HexGrid{
+		Grid: grid,
+		Rows: rows,
+		Cols: cols,
+		// R:    r,
 	}
-	return nil
 }
 
-func pixelToAxial(x, y, r float64) (q, s int) {
-	qf := (2.0 / 3.0 * x) / r
-	rf := (-1.0/3.0*x + math.Sqrt(3)/3*y) / r
-	return cubeRound(qf, rf)
-}
+func (g *HexGrid) CollideWithGrid(x, y float64, vp *Viewport) *HexTile {
+	// Apply viewport inverse transform
+	wx := (x - float64(vp.offsetX)) / float64(vp.scale)
+	wy := (y - float64(vp.offsetY)) / float64(vp.scale)
 
-func cubeRound(qf, rf float64) (q, r int) {
-	sf := -qf - rf
-	rq := math.Round(qf)
-	rr := math.Round(rf)
-	rs := math.Round(sf)
+	q, r := common.PixelToAxial(wx, wy)
 
-	dq := math.Abs(rq - qf)
-	dr := math.Abs(rr - rf)
-	ds := math.Abs(rs - sf)
-
-	qi, ri, si := int(rq), int(rr), int(rs)
-
-	if dq > dr && dq > ds {
-		qi = -ri - si
-	} else if dr > ds {
-		ri = -qi - si
+	tile, ok := g.Grid[[2]int{q, r}]
+	if !ok {
+		return nil
 	}
+	return tile
+}
 
-	return qi, ri
+func (g *HexGrid) DrawHighlightHexTile(screen *ebiten.Image, vp *Viewport) {
+	x, y := ebiten.CursorPosition()
+	selected := g.CollideWithGrid(float64(x), float64(y), vp)
+	if selected != nil {
+		cx, cy := selected.Pixel(vp)
+		vector.DrawFilledCircle(screen, float32(cx), float32(cy), 10, color.RGBA{255, 0, 0, 255}, false)
+	}
 }

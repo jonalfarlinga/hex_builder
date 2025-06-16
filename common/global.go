@@ -9,7 +9,6 @@ import (
 var WhitePixel = ebiten.NewImage(1, 1)
 var BGColor color.Color
 var GridColor color.RGBA
-var HexRadius float32
 
 func initColor() {
 	WhitePixel.Fill(color.White)
@@ -19,5 +18,4 @@ func initColor() {
 
 func InitGlobal() {
 	initColor()
-	HexRadius = 60
 }

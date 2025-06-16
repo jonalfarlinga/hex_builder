@@ -2,7 +2,6 @@ package objects
 
 import (
 	"hex_builder/common"
-	"image/color"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -10,38 +9,37 @@ import (
 )
 
 type HexTile struct {
-	cx, cy, r      float32
-	strokeWidth    float32
-	axialQ, axialR int
-	// clr            color.RGBA
-	// row, col       int
+	q, r int
 }
 
-func NewHexTile(x, y, r, width float32, row, col int) *HexTile {
-	axialQ := col
-	axialR := row - (col-(col&1))/2
+func NewHexTile(q, r int) *HexTile {
 	return &HexTile{
-		cx:          x,
-		cy:          y,
-		r:           r,
-		axialQ:      axialQ,
-		axialR:      axialR,
-		strokeWidth: width,
-		// clr:         common.GridColor,
-		// row:         row,
-		// col:         col,
+		q: q,
+		r: r,
 	}
 }
 
-func (h *HexTile) Draw(dst *ebiten.Image) {
+func (h *HexTile) Pixel(vp *Viewport) (float64, float64) {
+	x := common.HexRadius * 3.0 / 2.0 * float64(h.q)
+	y := common.HexRadius * math.Sqrt(3) * (float64(h.r) + float64(h.q)/2.0)
+
+	// Apply viewport transform
+	x = x*vp.scale + vp.offsetX
+	y = y*vp.scale + vp.offsetY
+	return x, y
+}
+
+func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport) {
+	cx, cy := h.Pixel(vp)
+	size := common.HexRadius * vp.scale
 	var path vector.Path
 	const sides = 6
 	angleStep := 2 * math.Pi / sides
 
 	for i := 0; i < sides; i++ {
 		angle := float64(i) * angleStep
-		x := h.cx + h.r*float32(math.Cos(angle))
-		y := h.cy + h.r*float32(math.Sin(angle))
+		x := float32(cx + size*math.Cos(angle))
+		y := float32(cy + size*math.Sin(angle))
 		if i == 0 {
 			path.MoveTo(x, y)
 		} else {
@@ -51,7 +49,7 @@ func (h *HexTile) Draw(dst *ebiten.Image) {
 	path.Close()
 
 	opts := &vector.StrokeOptions{
-		Width:    h.strokeWidth,
+		Width:    2,
 		LineCap:  vector.LineCapRound,
 		LineJoin: vector.LineJoinRound,
 	}
@@ -69,6 +67,51 @@ func (h *HexTile) Draw(dst *ebiten.Image) {
 	dst.DrawTriangles(vertices, indices, common.WhitePixel, nil)
 }
 
-func (h *HexTile) Highlight(dst *ebiten.Image) {
-	vector.DrawFilledCircle(dst, h.cx, h.cy, h.r/4, color.White, false)
+// Utility
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// func (h *HexTile) Draw(dst *ebiten.Image) {
+// 	var path vector.Path
+// 	const sides = 6
+// 	angleStep := 2 * math.Pi / sides
+
+// 	for i := 0; i < sides; i++ {
+// 		angle := float64(i) * angleStep
+// 		x := h.cx + h.r*float32(math.Cos(angle))
+// 		y := h.cy + h.r*float32(math.Sin(angle))
+// 		if i == 0 {
+// 			path.MoveTo(x, y)
+// 		} else {
+// 			path.LineTo(x, y)
+// 		}
+// 	}
+// 	path.Close()
+
+// 	opts := &vector.StrokeOptions{
+// 		Width:    h.strokeWidth,
+// 		LineCap:  vector.LineCapRound,
+// 		LineJoin: vector.LineJoinRound,
+// 	}
+
+// 	vertices, indices := path.AppendVerticesAndIndicesForStroke(nil, nil, opts)
+
+// 	// Set vertex color
+// 	for i := range vertices {
+// 		vertices[i].ColorG = float32(common.GridColor.G) / 255
+// 		vertices[i].ColorB = float32(common.GridColor.B) / 255
+// 		vertices[i].ColorA = float32(common.GridColor.A) / 255
+// 		vertices[i].ColorR = float32(common.GridColor.R) / 255
+// 	}
+
+// }
