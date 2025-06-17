@@ -8,16 +8,18 @@ import (
 )
 
 type Button struct {
-	x, y, height, width float32
-	xR, yB              float32
-	text                string
-	background          color.Color
+	x, y, xR, yB  int
+	height, width float32
+	text          string
+	background    color.Color
 }
 
-func NewButton(x, y, height, width float32, text string) *Button {
+func NewButton(x, y int, height, width float32, text string) *Button {
 	return &Button{
 		x:          x,
 		y:          y,
+		xR:         x + int(width),
+		yB:         y + int(height),
 		height:     height,
 		width:      width,
 		background: color.RGBA{180, 180, 0, 100},
@@ -25,8 +27,7 @@ func NewButton(x, y, height, width float32, text string) *Button {
 	}
 }
 
-func (b *Button) Collide(mx, my int) bool {
-	x, y := float32(mx), float32(my)
+func (b *Button) Collide(x, y int) bool {
 	if x < b.x || x > b.xR || y < b.y || x > b.yB {
 		return false
 	}
@@ -34,5 +35,8 @@ func (b *Button) Collide(mx, my int) bool {
 }
 
 func (b *Button) Draw(screen *ebiten.Image) {
-	vector.DrawFilledRect(screen, b.x, b.y, b.width, b.height, b.background, false)
+	vector.DrawFilledRect(
+		screen, float32(b.x), float32(b.y),
+		b.width, b.height, b.background, false,
+	)
 }

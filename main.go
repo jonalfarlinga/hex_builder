@@ -23,7 +23,7 @@ func main() {
 func menuButtons() []*objects.Button {
 	buttons := make([]*objects.Button, 0)
 	buttons = append(buttons, objects.NewButton(
-		float32(common.ScreenWidth) - 200, 50, 50, 100, "X",
+		common.ScreenWidth - 200, 50, 50, 100, "X",
 	))
 	return buttons
 }
