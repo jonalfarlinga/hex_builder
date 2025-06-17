@@ -9,15 +9,19 @@ import (
 )
 
 type Game struct {
-	grid     *objects.HexGrid
-	viewport *objects.Viewport
+	grid            *objects.HexGrid
+	viewport        *objects.Viewport
+	showSystemModal bool
+	buttons         []*objects.Button
 }
 
-func NewGame() *Game {
+func NewGame(buttons []*objects.Button) *Game {
 	vp := objects.NewViewport()
 	return &Game{
-		grid:     objects.NewHexGrid(100, 100),
-		viewport: vp,
+		grid:            objects.NewHexGrid(100, 100),
+		viewport:        vp,
+		showSystemModal: false,
+		buttons:         buttons,
 	}
 }
 
@@ -28,6 +32,9 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.viewport.Draw(g.grid, screen)
+	for _, b := range g.buttons {
+		b.Draw(screen)
+	}
 	debug.DebugDraw(screen, g.viewport)
 }
 

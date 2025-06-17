@@ -3,4 +3,4 @@
 // White dwarf
 // Neutron
 // Red Dwarf
-package stars
+package items
