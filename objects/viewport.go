@@ -26,7 +26,7 @@ func (vp *Viewport) Draw(hg *HexGrid, dst *ebiten.Image) {
 	}
 }
 
-func (vp *Viewport) Update() {
+func (vp *Viewport) Update() error {
 	vp.scale = Zoom(vp.scale)
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
 		if !vp.stroke.active {
@@ -37,6 +37,7 @@ func (vp *Viewport) Update() {
 	} else {
 		vp.EndPan()
 	}
+	return nil
 }
 
 func Zoom(scale float64) float64 {
@@ -56,11 +57,4 @@ func Zoom(scale float64) float64 {
 		scale = 100
 	}
 	return scale
-}
-
-func Pan(oX, oY float64) (float64, float64) {
-	x, y := ebiten.CursorPosition()
-	oX += float64(x)
-	oY += float64(y)
-	return oX, oY
 }

@@ -27,6 +27,8 @@ func NewGame(buttons []*objects.Button) *Game {
 
 func (g *Game) Update() error {
 	g.viewport.Update()
+	x, y := ebiten.CursorPosition()
+	g.actionUpdate(x, y)
 	return nil
 }
 
