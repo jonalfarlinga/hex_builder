@@ -2,6 +2,7 @@ package objects
 
 import (
 	"hex_builder/common"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -13,8 +14,8 @@ type Viewport struct {
 
 func NewViewport() *Viewport {
 	return &Viewport{
-		offsetX: float64(common.ScreenWidth/2),
-		offsetY: float64(common.ScreenHeight/2),
+		offsetX: float64(common.ScreenWidth / 2),
+		offsetY: float64(common.ScreenHeight / 2),
 		scale:   60,
 		stroke:  Stroke{},
 	}
@@ -22,7 +23,7 @@ func NewViewport() *Viewport {
 
 func (vp *Viewport) Draw(hg *HexGrid, dst *ebiten.Image) {
 	for _, tile := range hg.Grid {
-		tile.Draw(dst, vp)
+		tile.Draw(dst, vp, tile == hg.SelHex)
 	}
 }
 
@@ -43,13 +44,16 @@ func (vp *Viewport) Update() error {
 func Zoom(scale float64) float64 {
 	_, dy := ebiten.Wheel()
 
+	// Key-based zoom modifier
+	if ebiten.IsKeyPressed(ebiten.KeyMinus) {
+		dy -= 0.35 // slower than wheel
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyEqual) {
+		dy += 0.35
+	}
 	zoomFactor := 1.1
 
-	if dy > 0 {
-		scale *= zoomFactor
-	} else if dy < 0 {
-		scale /= zoomFactor
-	}
+	scale *= math.Pow(zoomFactor, dy)
 
 	if scale < 10 {
 		scale = 10
