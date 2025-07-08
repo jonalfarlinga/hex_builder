@@ -19,8 +19,18 @@ func (g *Game) actionUpdate(x, y int) error {
 		}
 		if clickedButton != nil {
 			clickedButton.Fn()
+		} else if hex := g.grid.CollideWithGrid(float64(x), float64(y), g.viewport); hex != nil {
+			if g.grid.SelHex == hex {
+				g.grid.SelHex = nil
+			} else {
+				g.grid.SelHex = hex
+			}
 		}
 	}
 	prevClicked = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+
+	if ebiten.IsKeyPressed(ebiten.KeySpace) && g.grid.SelHex != nil {
+		g.grid.SelHex.NewSystem()
+	}
 	return nil
 }

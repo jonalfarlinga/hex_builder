@@ -2,6 +2,7 @@ package objects
 
 import (
 	"hex_builder/common"
+	"hex_builder/objects/items"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -9,7 +10,8 @@ import (
 )
 
 type HexTile struct {
-	q, r int
+	q, r   int
+	system *items.StellarSystem
 }
 
 func NewHexTile(q, r int) *HexTile {
@@ -29,7 +31,7 @@ func (h *HexTile) Pixel(vp *Viewport) (float64, float64) {
 	return x, y
 }
 
-func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport) {
+func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport, selected bool) {
 	cx, cy := h.Pixel(vp)
 	size := common.HexRadius * vp.scale
 	var path vector.Path
@@ -47,9 +49,12 @@ func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport) {
 		}
 	}
 	path.Close()
-
+	var width float32 = 2
+	if selected {
+		width = 4
+	}
 	opts := &vector.StrokeOptions{
-		Width:    2,
+		Width:    width,
 		LineCap:  vector.LineCapRound,
 		LineJoin: vector.LineJoinRound,
 	}
@@ -65,6 +70,11 @@ func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport) {
 	}
 
 	dst.DrawTriangles(vertices, indices, common.WhitePixel, nil)
+	if h.system != nil {
+		h.system.Draw(dst, cx, cy, size*0.3)
+	}
 }
 
-// Utility
+func (h *HexTile) NewSystem() {
+	h.system = items.NewStellarSystem()
+}

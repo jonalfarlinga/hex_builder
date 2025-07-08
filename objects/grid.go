@@ -2,16 +2,13 @@ package objects
 
 import (
 	"hex_builder/common"
-	"image/color"
-
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 type HexGrid struct {
-	Grid map[[2]int]*HexTile
-	Rows int
-	Cols int
+	Grid   map[[2]int]*HexTile
+	Rows   int
+	Cols   int
+	SelHex *HexTile
 }
 
 func NewHexGrid(rows, cols int) *HexGrid {
@@ -45,14 +42,14 @@ func (g *HexGrid) CollideWithGrid(x, y float64, vp *Viewport) *HexTile {
 	return tile
 }
 
-func (g *HexGrid) DrawHighlightHexTile(screen *ebiten.Image, vp *Viewport) {
-	x, y := ebiten.CursorPosition()
-	selected := g.CollideWithGrid(float64(x), float64(y), vp)
-	if selected != nil {
-		cx, cy := selected.Pixel(vp)
-		vector.DrawFilledCircle(
-			screen, float32(cx), float32(cy),
-			10, color.RGBA{255, 0, 0, 255}, false,
-		)
-	}
-}
+// func (g *HexGrid) DrawHighlightHexTile(screen *ebiten.Image, vp *Viewport) {
+// 	x, y := ebiten.CursorPosition()
+// 	selected := g.CollideWithGrid(float64(x), float64(y), vp)
+// 	if selected != nil {
+// 		cx, cy := selected.Pixel(vp)
+// 		vector.DrawFilledCircle(
+// 			screen, float32(cx), float32(cy),
+// 			10, color.RGBA{255, 0, 0, 255}, false,
+// 		)
+// 	}
+// }
