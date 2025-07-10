@@ -27,8 +27,8 @@ func NewButton(x, y int, height, width float32, text string, Fn func()) *Button 
 		yB:         y + int(height),
 		height:     height,
 		width:      width,
-		background: color.RGBA{180, 180, 0, 200},
-		hoverBG:    color.RGBA{210, 210, 0, 200},
+		background: common.ButtonColor,
+		hoverBG:    common.ButtonHover,
 		text:       text,
 		Fn:         Fn,
 	}
