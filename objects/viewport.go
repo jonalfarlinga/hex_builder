@@ -43,6 +43,12 @@ func (vp *Viewport) Update() error {
 
 func Zoom(scale float64) float64 {
 	_, dy := ebiten.Wheel()
+	if ebiten.IsKeyPressed(ebiten.KeyMinus) {
+		dy -= .1
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyEqual) {
+		dy += .1
+	}
 
 	// Key-based zoom modifier
 	if ebiten.IsKeyPressed(ebiten.KeyMinus) {
@@ -52,7 +58,10 @@ func Zoom(scale float64) float64 {
 		dy += 0.35
 	}
 	zoomFactor := 1.1
+<<<<<<< HEAD
+=======
 
+>>>>>>> 9a04d782c545fed2c0f247c32753bb4b3dd7771a
 	scale *= math.Pow(zoomFactor, dy)
 
 	if scale < 10 {
