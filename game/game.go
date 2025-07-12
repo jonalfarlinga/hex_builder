@@ -13,6 +13,7 @@ type Game struct {
 	viewport        *objects.Viewport
 	showSystemModal bool
 	buttons         []*objects.Button
+	activeModal		*objects.Modal
 }
 
 func NewGame(buttons []*objects.Button) *Game {
@@ -36,6 +37,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.viewport.Draw(g.grid, screen)
 	for _, b := range g.buttons {
 		b.Draw(screen)
+	}
+	if g.activeModal != nil {
+		g.activeModal.Draw(screen)
 	}
 	debug.DebugDraw(screen, g.viewport)
 }

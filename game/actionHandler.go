@@ -2,14 +2,15 @@ package game
 
 import (
 	"hex_builder/objects"
+	"hex_builder/common"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-var prevClicked bool = false
+var prevClicked *bool = &common.PrevClicked
 
 func (g *Game) actionUpdate(x, y int) error {
-	if prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+	if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		var clickedButton *objects.Button
 		for _, button := range g.buttons {
 			if button.Collide(x, y) {
@@ -27,10 +28,11 @@ func (g *Game) actionUpdate(x, y int) error {
 			}
 		}
 	}
-	prevClicked = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+	*prevClicked = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 
 	if ebiten.IsKeyPressed(ebiten.KeySpace) && g.grid.SelHex != nil {
 		g.grid.SelHex.NewSystem()
+		g.activeModal = objects.NewModal(100, 100, 300, 300, make([]objects.Component, 0))
 	}
 	return nil
 }

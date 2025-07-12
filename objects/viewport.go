@@ -58,10 +58,6 @@ func Zoom(scale float64) float64 {
 		dy += 0.35
 	}
 	zoomFactor := 1.1
-<<<<<<< HEAD
-=======
-
->>>>>>> 9a04d782c545fed2c0f247c32753bb4b3dd7771a
 	scale *= math.Pow(zoomFactor, dy)
 
 	if scale < 10 {
