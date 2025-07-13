@@ -16,10 +16,16 @@ type Button struct {
 	text          string
 	background    color.Color
 	hoverBG       color.Color
-	Fn            func()
+	action        c.UIAction
+	payload       c.UIPayload
 }
 
-func NewButton(x, y int, height, width float32, text string, Fn func()) *Button {
+var _ Component = (*Button)(nil)
+var _ c.Interactable = (*Button)(nil)
+
+func NewButton(
+	x, y int, height, width float32, text string, action c.UIAction,
+) *Button {
 	return &Button{
 		x:          x,
 		y:          y,
@@ -30,12 +36,13 @@ func NewButton(x, y int, height, width float32, text string, Fn func()) *Button 
 		background: c.ButtonColor,
 		hoverBG:    c.ButtonHover,
 		text:       text,
-		Fn:         Fn,
+		action:     action,
 	}
 }
 
 func (b *Button) Collide(x, y int) bool {
-	if x > b.x && x < b.xR && y > b.y && y < b.yB {
+	if x > b.x && x < b.xR &&
+		y > b.y && y < b.yB {
 		return true
 	}
 	return false
@@ -60,4 +67,23 @@ func (b *Button) Draw(screen *ebiten.Image) {
 		int(textX), int(float32(b.y)+b.height/2+5),
 		color.White,
 	)
+}
+
+func (b *Button) Update() (c.UIAction, c.UIPayload, error) {
+	return b.action, b.payload, nil
+}
+
+func (b *Button) Dimensions() (int, int) {
+	return int(b.height), int(b.width)
+}
+
+func (b *Button) GetComponentType() string {
+	return ComponentButton
+}
+
+func (b *Button) SetPos(x, y float32) {
+	b.x = int(x)
+	b.y = int(y)
+	b.xR = b.x + int(b.width)
+	b.yB = b.y + int(b.height)
 }

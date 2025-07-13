@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"fmt"
 	c "hex_builder/common"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -17,15 +18,6 @@ type Modal struct {
 	Padding       float32
 	Spacing       float32
 	Active        bool
-}
-
-type Component interface {
-	Draw(*ebiten.Image)
-	Update(*Modal) error
-	Dimensions() (int, int)
-	SetPos(float32, float32)
-	Collide(int, int) bool
-	GetComponentType() string
 }
 
 func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
@@ -74,7 +66,7 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (m *Modal) Update(x, y int) error {
+func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	clicked := false
 	if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		clicked = true
@@ -84,13 +76,19 @@ func (m *Modal) Update(x, y int) error {
 			m.focus[i] = comp.Collide(x, y)
 		}
 		if m.focus[i] {
-			err := comp.Update(m)
+			action, payload, err := comp.Update()
 			if err != nil {
-				return err
+				return c.ActionNone, nil, fmt.Errorf("error updating %v: %s", comp, err)
 			}
+			switch action {
+			case c.ActionCloseModal:
+				return c.ActionCloseModal, nil, nil
+			}
+			// handle action
+			fmt.Println(action, payload)
 		}
 	}
-	return nil
+	return c.ActionNone, nil, nil
 }
 
 func (m *Modal) Collide(x, y int) bool {

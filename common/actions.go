@@ -1,8 +1,10 @@
 package common
 
-type UIAction string
+type UIAction int
+type UIPayload interface{}
 
 const (
-	ActionNone UIAction = "none"
-	ActionClose UIAction = "close"
+	ActionNone UIAction = iota
+	ActionClose
+	ActionCloseModal
 )

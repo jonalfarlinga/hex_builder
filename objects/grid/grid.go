@@ -1,4 +1,4 @@
-package objects
+package grid
 
 import (
 	c "hex_builder/common"
@@ -30,8 +30,8 @@ func NewHexGrid(rows, cols int) *HexGrid {
 }
 
 func (g *HexGrid) CollideWithGrid(x, y float64, vp *Viewport) *HexTile {
-	wx := (x - float64(vp.offsetX)) / float64(vp.scale)
-	wy := (y - float64(vp.offsetY)) / float64(vp.scale)
+	wx := (x - float64(vp.OffsetX)) / float64(vp.Scale)
+	wy := (y - float64(vp.OffsetY)) / float64(vp.Scale)
 
 	q, r := c.PixelToAxial(wx, wy)
 

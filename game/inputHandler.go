@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	c "hex_builder/common"
 	"hex_builder/objects"
 
@@ -19,7 +20,11 @@ func (g *Game) inputUpdate(x, y int) error {
 			}
 		}
 		if clickedButton != nil {
-			clickedButton.Fn()
+			action, payload, err := clickedButton.Update()
+			if err != nil {
+				return fmt.Errorf("button clicked %v: %s", clickedButton, err)
+			}
+			g.actionUpdate(action, payload)
 		} else if hex := g.grid.CollideWithGrid(float64(x), float64(y), g.viewport); hex != nil {
 			if g.grid.SelectedHex == hex {
 				g.grid.SelectedHex = nil

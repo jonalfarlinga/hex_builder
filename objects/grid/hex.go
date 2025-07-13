@@ -1,4 +1,4 @@
-package objects
+package grid
 
 import (
 	c "hex_builder/common"
@@ -26,14 +26,14 @@ func (h *HexTile) Pixel(vp *Viewport) (float64, float64) {
 	y := c.HexRadius * math.Sqrt(3) * (float64(h.r) + float64(h.q)/2.0)
 
 	// Apply viewport transform
-	x = x*vp.scale + vp.offsetX
-	y = y*vp.scale + vp.offsetY
+	x = x*vp.Scale + vp.OffsetX
+	y = y*vp.Scale + vp.OffsetY
 	return x, y
 }
 
 func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport, selected bool) {
 	cx, cy := h.Pixel(vp)
-	size := c.HexRadius * vp.scale
+	size := c.HexRadius * vp.Scale
 	var path vector.Path
 	const sides = 6
 	angleStep := 2 * math.Pi / sides

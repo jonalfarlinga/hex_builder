@@ -4,22 +4,23 @@ import (
 	c "hex_builder/common"
 	"hex_builder/debug"
 	"hex_builder/objects"
+	"hex_builder/objects/grid"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Game struct {
-	grid            *objects.HexGrid
-	viewport        *objects.Viewport
+	grid            *grid.HexGrid
+	viewport        *grid.Viewport
 	showSystemModal bool
 	buttons         []*objects.Button
 	activeModal     *objects.Modal
 }
 
 func NewGame(buttons []*objects.Button) *Game {
-	vp := objects.NewViewport()
+	vp := grid.NewViewport()
 	return &Game{
-		grid:            objects.NewHexGrid(100, 100),
+		grid:            grid.NewHexGrid(100, 100),
 		viewport:        vp,
 		showSystemModal: false,
 		buttons:         buttons,

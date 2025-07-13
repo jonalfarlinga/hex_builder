@@ -3,14 +3,14 @@ package debug
 import (
 	"fmt"
 	c "hex_builder/common"
-	"hex_builder/objects"
+	"hex_builder/objects/grid"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font/basicfont"
 )
 
-func DebugDraw(screen *ebiten.Image, vp *objects.Viewport) {
+func DebugDraw(screen *ebiten.Image, vp *grid.Viewport) {
 	x, y := ebiten.CursorPosition()
 
 	// Convert to world coordinates (inverse viewport transform)
@@ -22,11 +22,11 @@ func DebugDraw(screen *ebiten.Image, vp *objects.Viewport) {
 	q, r := c.PixelToAxial(wx, wy)
 
 	msg := fmt.Sprintf(
-		"Screen: (%d, %d)\n" +
-		"World: (%.2f, %.2f)\n" +
-		"Hex: (q=%d, r=%d)\n" +
-		"Window Offset: (%.2f, %.2f)\n" +
-		"Window Scale: %.2f",
+		"Screen: (%d, %d)\n"+
+			"World: (%.2f, %.2f)\n"+
+			"Hex: (q=%d, r=%d)\n"+
+			"Window Offset: (%.2f, %.2f)\n"+
+			"Window Scale: %.2f",
 		x, y, wx, wy, q, r, ox, oy, s,
 	)
 

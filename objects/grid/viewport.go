@@ -1,4 +1,4 @@
-package objects
+package grid
 
 import (
 	c "hex_builder/common"
@@ -8,15 +8,15 @@ import (
 )
 
 type Viewport struct {
-	offsetX, offsetY, scale float64
+	OffsetX, OffsetY, Scale float64
 	stroke                  Stroke
 }
 
 func NewViewport() *Viewport {
 	return &Viewport{
-		offsetX: float64(c.ScreenWidth / 2),
-		offsetY: float64(c.ScreenHeight / 2),
-		scale:   60,
+		OffsetX: float64(c.ScreenWidth / 2),
+		OffsetY: float64(c.ScreenHeight / 2),
+		Scale:   60,
 		stroke:  Stroke{},
 	}
 }
@@ -28,7 +28,7 @@ func (vp *Viewport) Draw(hg *HexGrid, dst *ebiten.Image) {
 }
 
 func (vp *Viewport) Update() error {
-	vp.scale = Zoom(vp.scale)
+	vp.Scale = Zoom(vp.Scale)
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
 		if !vp.stroke.active {
 			vp.StartPan()

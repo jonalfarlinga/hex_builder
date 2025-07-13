@@ -14,8 +14,10 @@ type TextBox struct {
 	Text          string
 	x, y          float32
 	height, width float32
-	componentType string
 }
+
+var _ Component = (*TextBox)(nil)
+var _ c.Interactable = (*TextBox)(nil)
 
 func NewTextBox(defaultText string, x, y, height, width float32) *TextBox {
 	return &TextBox{
@@ -24,7 +26,6 @@ func NewTextBox(defaultText string, x, y, height, width float32) *TextBox {
 		y:             y,
 		height:        height,
 		width:         width,
-		componentType: "TextBox",
 	}
 }
 
@@ -34,7 +35,7 @@ func (t *TextBox) Draw(screen *ebiten.Image) {
 		c.TextBoxColor, true)
 }
 
-func (t *TextBox) Update(m *Modal) error {
+func (t *TextBox) Update() (c.UIAction, c.UIPayload, error) {
 	if !prevBackPressed && ebiten.IsKeyPressed(ebiten.KeyBackspace) && len(t.Text) > 0 {
 		t.Text = t.Text[:len(t.Text)-1]
 	}
@@ -46,7 +47,7 @@ func (t *TextBox) Update(m *Modal) error {
 		}
 	}
 	prevBackPressed = ebiten.IsKeyPressed(ebiten.KeyBackspace)
-	return nil
+	return c.ActionNone, nil, nil
 }
 
 func (t *TextBox) Dimensions() (int, int) {
@@ -68,5 +69,5 @@ func (t *TextBox) Collide(x, y int) bool {
 }
 
 func (t *TextBox) GetComponentType() string {
-	return t.componentType
+	return ComponentTextBox
 }
