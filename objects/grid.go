@@ -1,22 +1,22 @@
 package objects
 
 import (
-	"hex_builder/common"
+	c "hex_builder/common"
 )
 
 type HexGrid struct {
-	Grid   map[[2]int]*HexTile
-	Rows   int
-	Cols   int
-	SelHex *HexTile
+	Grid        map[[2]int]*HexTile
+	Rows        int
+	Cols        int
+	SelectedHex *HexTile
 }
 
 func NewHexGrid(rows, cols int) *HexGrid {
 	grid := make(map[[2]int]*HexTile)
 
 	for q := -cols / 2; q <= cols/2; q++ {
-		r1 := common.Max(-rows/2, -q-cols/2)
-		r2 := common.Min(rows/2, -q+cols/2)
+		r1 := c.Max(-rows/2, -q-cols/2)
+		r2 := c.Min(rows/2, -q+cols/2)
 		for s := r1; s <= r2; s++ {
 			grid[[2]int{q, s}] = NewHexTile(q, s)
 		}
@@ -33,7 +33,7 @@ func (g *HexGrid) CollideWithGrid(x, y float64, vp *Viewport) *HexTile {
 	wx := (x - float64(vp.offsetX)) / float64(vp.scale)
 	wy := (y - float64(vp.offsetY)) / float64(vp.scale)
 
-	q, r := common.PixelToAxial(wx, wy)
+	q, r := c.PixelToAxial(wx, wy)
 
 	tile, ok := g.Grid[[2]int{q, r}]
 	if !ok {

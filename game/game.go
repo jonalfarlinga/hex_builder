@@ -1,7 +1,7 @@
 package game
 
 import (
-	"hex_builder/common"
+	c "hex_builder/common"
 	"hex_builder/debug"
 	"hex_builder/objects"
 
@@ -13,7 +13,7 @@ type Game struct {
 	viewport        *objects.Viewport
 	showSystemModal bool
 	buttons         []*objects.Button
-	activeModal		*objects.Modal
+	activeModal     *objects.Modal
 }
 
 func NewGame(buttons []*objects.Button) *Game {
@@ -29,7 +29,7 @@ func NewGame(buttons []*objects.Button) *Game {
 func (g *Game) Update() error {
 	g.viewport.Update()
 	x, y := ebiten.CursorPosition()
-	g.actionUpdate(x, y)
+	g.inputUpdate(x, y)
 	return nil
 }
 
@@ -45,5 +45,5 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return int(common.ScreenWidth), int(common.ScreenHeight)
+	return int(c.ScreenWidth), int(c.ScreenHeight)
 }

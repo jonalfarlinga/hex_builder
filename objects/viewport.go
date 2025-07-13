@@ -1,7 +1,7 @@
 package objects
 
 import (
-	"hex_builder/common"
+	c "hex_builder/common"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -14,8 +14,8 @@ type Viewport struct {
 
 func NewViewport() *Viewport {
 	return &Viewport{
-		offsetX: float64(common.ScreenWidth / 2),
-		offsetY: float64(common.ScreenHeight / 2),
+		offsetX: float64(c.ScreenWidth / 2),
+		offsetY: float64(c.ScreenHeight / 2),
 		scale:   60,
 		stroke:  Stroke{},
 	}
@@ -23,7 +23,7 @@ func NewViewport() *Viewport {
 
 func (vp *Viewport) Draw(hg *HexGrid, dst *ebiten.Image) {
 	for _, tile := range hg.Grid {
-		tile.Draw(dst, vp, tile == hg.SelHex)
+		tile.Draw(dst, vp, tile == hg.SelectedHex)
 	}
 }
 

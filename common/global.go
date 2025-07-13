@@ -20,7 +20,7 @@ var (
 )
 var PrevClicked bool = false
 
-func initColor() {
+func InitColor() {
 	WhitePixel.Fill(color.White)
 	BGColor = color.Black
 	GridColor = color.RGBA{100, 100, 100, 255}
@@ -29,8 +29,4 @@ func initColor() {
 	ModalColor = color.RGBA{0, 50, 200, 200}
 	ButtonColor = color.RGBA{180, 180, 0, 200}
 	ButtonHover = color.RGBA{210, 210, 0, 200}
-}
-
-func InitGlobal() {
-	initColor()
 }

@@ -1,7 +1,7 @@
 package objects
 
 import (
-	"hex_builder/common"
+	c "hex_builder/common"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -27,8 +27,8 @@ func NewButton(x, y int, height, width float32, text string, Fn func()) *Button 
 		yB:         y + int(height),
 		height:     height,
 		width:      width,
-		background: common.ButtonColor,
-		hoverBG:    common.ButtonHover,
+		background: c.ButtonColor,
+		hoverBG:    c.ButtonHover,
 		text:       text,
 		Fn:         Fn,
 	}
@@ -53,10 +53,10 @@ func (b *Button) Draw(screen *ebiten.Image) {
 		b.width, b.height, buttonColor, false,
 	)
 
-	bounds := font.MeasureString(common.MenuFont, b.text)
+	bounds := font.MeasureString(c.MenuFont, b.text)
 	textX := float32(b.x) + (b.width-float32(bounds.Floor()))/2
 	text.Draw(
-		screen, b.text, common.MenuFont,
+		screen, b.text, c.MenuFont,
 		int(textX), int(float32(b.y)+b.height/2+5),
 		color.White,
 	)

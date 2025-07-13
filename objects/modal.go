@@ -1,13 +1,13 @@
 package objects
 
 import (
-	"hex_builder/common"
+	c "hex_builder/common"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-var prevClicked *bool = &common.PrevClicked
+var prevClicked *bool = &c.PrevClicked
 
 type Modal struct {
 	x, y          float32
@@ -28,16 +28,16 @@ type Component interface {
 	GetComponentType() string
 }
 
-func NewModal(x, y float32, height, width float32, c []Component) *Modal {
+func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
 	m := &Modal{
-		Components: c,
-		focus:      make([]bool, len(c)),
+		Components: comp,
+		focus:      make([]bool, len(comp)),
 		x:          x,
 		y:          y,
 		height:     height,
 		width:      width,
-		Padding:    float32(common.ScreenHeight / 100),
-		Spacing:    float32(common.ScreenHeight / 100),
+		Padding:    float32(c.ScreenHeight / 100),
+		Spacing:    float32(c.ScreenHeight / 100),
 		Active:     true,
 	}
 	m.LayoutComponents()
@@ -62,14 +62,14 @@ func (m *Modal) LayoutComponents() {
 func (m *Modal) Draw(screen *ebiten.Image) {
 	vector.DrawFilledRect(
 		screen, m.x, m.y, m.width, m.height,
-		common.ModalColor, true)
+		c.ModalColor, true)
 
 	for i, comp := range m.Components {
 		comp.Draw(screen)
 		if m.focus[i] {
 			vector.StrokeRect(
 				screen, m.x, m.y, m.width, m.height,
-				3, common.BGColor, true)
+				3, c.BGColor, true)
 		}
 	}
 }

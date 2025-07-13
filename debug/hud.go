@@ -2,7 +2,7 @@ package debug
 
 import (
 	"fmt"
-	"hex_builder/common"
+	c "hex_builder/common"
 	"hex_builder/objects"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -19,7 +19,7 @@ func DebugDraw(screen *ebiten.Image, vp *objects.Viewport) {
 	wx := (float64(x) - ox) / s
 	wy := (float64(y) - oy) / s
 
-	q, r := common.PixelToAxial(wx, wy)
+	q, r := c.PixelToAxial(wx, wy)
 
 	msg := fmt.Sprintf(
 		"Screen: (%d, %d)\n" +
@@ -30,5 +30,5 @@ func DebugDraw(screen *ebiten.Image, vp *objects.Viewport) {
 		x, y, wx, wy, q, r, ox, oy, s,
 	)
 
-	text.Draw(screen, msg, basicfont.Face7x13, 10, 20, common.TextColor)
+	text.Draw(screen, msg, basicfont.Face7x13, 10, 20, c.TextColor)
 }

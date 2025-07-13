@@ -1,7 +1,7 @@
 package objects
 
 import (
-	"hex_builder/common"
+	c "hex_builder/common"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -31,7 +31,7 @@ func NewTextBox(defaultText string, x, y, height, width float32) *TextBox {
 func (t *TextBox) Draw(screen *ebiten.Image) {
 	vector.DrawFilledRect(
 		screen, t.x, t.y, t.width, t.height,
-		common.TextBoxColor, true)
+		c.TextBoxColor, true)
 }
 
 func (t *TextBox) Update(m *Modal) error {

@@ -1,7 +1,7 @@
 package objects
 
 import (
-	"hex_builder/common"
+	c "hex_builder/common"
 	"hex_builder/objects/items"
 	"math"
 
@@ -22,8 +22,8 @@ func NewHexTile(q, r int) *HexTile {
 }
 
 func (h *HexTile) Pixel(vp *Viewport) (float64, float64) {
-	x := common.HexRadius * 3.0 / 2.0 * float64(h.q)
-	y := common.HexRadius * math.Sqrt(3) * (float64(h.r) + float64(h.q)/2.0)
+	x := c.HexRadius * 3.0 / 2.0 * float64(h.q)
+	y := c.HexRadius * math.Sqrt(3) * (float64(h.r) + float64(h.q)/2.0)
 
 	// Apply viewport transform
 	x = x*vp.scale + vp.offsetX
@@ -33,7 +33,7 @@ func (h *HexTile) Pixel(vp *Viewport) (float64, float64) {
 
 func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport, selected bool) {
 	cx, cy := h.Pixel(vp)
-	size := common.HexRadius * vp.scale
+	size := c.HexRadius * vp.scale
 	var path vector.Path
 	const sides = 6
 	angleStep := 2 * math.Pi / sides
@@ -63,13 +63,13 @@ func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport, selected bool) {
 
 	// Set vertex color
 	for i := range vertices {
-		vertices[i].ColorG = float32(common.GridColor.G) / 255
-		vertices[i].ColorB = float32(common.GridColor.B) / 255
-		vertices[i].ColorA = float32(common.GridColor.A) / 255
-		vertices[i].ColorR = float32(common.GridColor.R) / 255
+		vertices[i].ColorG = float32(c.GridColor.G) / 255
+		vertices[i].ColorB = float32(c.GridColor.B) / 255
+		vertices[i].ColorA = float32(c.GridColor.A) / 255
+		vertices[i].ColorR = float32(c.GridColor.R) / 255
 	}
 
-	dst.DrawTriangles(vertices, indices, common.WhitePixel, nil)
+	dst.DrawTriangles(vertices, indices, c.WhitePixel, nil)
 	if h.system != nil {
 		h.system.Draw(dst, cx, cy, size*0.3)
 	}
