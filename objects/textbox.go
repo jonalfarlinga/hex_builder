@@ -2,9 +2,11 @@ package objects
 
 import (
 	c "hex_builder/common"
+	"image/color"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
@@ -33,6 +35,7 @@ func (t *TextBox) Draw(screen *ebiten.Image) {
 	vector.DrawFilledRect(
 		screen, t.x, t.y, t.width, t.height,
 		c.TextBoxColor, true)
+	text.Draw(screen, t.Text, c.MenuFont, int(t.x+7), int(t.y+30), color.White)
 }
 
 func (t *TextBox) Update() (c.UIAction, c.UIPayload, error) {
@@ -40,7 +43,7 @@ func (t *TextBox) Update() (c.UIAction, c.UIPayload, error) {
 		t.Text = t.Text[:len(t.Text)-1]
 	}
 	for _, r := range ebiten.AppendInputChars(nil) {
-		if r > 32 && r < 127 {
+		if r >= 32 && r < 127 {
 			t.Text += string(r)
 		} else {
 			log.Println("Invalid character:", r)
@@ -51,7 +54,7 @@ func (t *TextBox) Update() (c.UIAction, c.UIPayload, error) {
 }
 
 func (t *TextBox) Dimensions() (int, int) {
-	return int(t.height), int(t.width)
+	return int(t.width), int(t.height)
 }
 
 func (t *TextBox) SetPos(x, y float32) {
@@ -70,4 +73,8 @@ func (t *TextBox) Collide(x, y int) bool {
 
 func (t *TextBox) GetComponentType() string {
 	return ComponentTextBox
+}
+
+func (t *TextBox) Pos() (float32, float32) {
+	return t.x, t.y
 }

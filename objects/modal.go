@@ -18,6 +18,7 @@ type Modal struct {
 	Padding       float32
 	Spacing       float32
 	Active        bool
+	image         *ebiten.Image
 }
 
 func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
@@ -31,6 +32,7 @@ func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
 		Padding:    float32(c.ScreenHeight / 100),
 		Spacing:    float32(c.ScreenHeight / 100),
 		Active:     true,
+		image:      ebiten.NewImage(int(width), int(height)),
 	}
 	m.LayoutComponents()
 	return m
@@ -43,10 +45,11 @@ func (m *Modal) AddComponent(c Component) {
 }
 
 func (m *Modal) LayoutComponents() {
-	cursorY := m.Padding
+	cursorY := m.Padding + m.y
+	cursorX := m.Padding + m.x
 	for _, c := range m.Components {
-		c.SetPos(m.Padding, cursorY)
-		h, _ := c.Dimensions()
+		c.SetPos(cursorX, cursorY)
+		_, h := c.Dimensions()
 		cursorY += float32(h) + m.Spacing
 	}
 }
@@ -59,8 +62,10 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 	for i, comp := range m.Components {
 		comp.Draw(screen)
 		if m.focus[i] {
+			posx, posy := comp.Pos()
+			dimx, dimy := comp.Dimensions()
 			vector.StrokeRect(
-				screen, m.x, m.y, m.width, m.height,
+				screen, posx, posy, float32(dimx), float32(dimy),
 				3, c.BGColor, true)
 		}
 	}

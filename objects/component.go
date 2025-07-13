@@ -11,6 +11,7 @@ type Component interface {
 	Update() (c.UIAction, c.UIPayload, error)
 	Dimensions() (int, int)
 	SetPos(float32, float32)
+	Pos() (float32, float32)
 	Collide(int, int) bool
 	GetComponentType() string
 }

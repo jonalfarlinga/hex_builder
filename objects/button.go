@@ -74,7 +74,7 @@ func (b *Button) Update() (c.UIAction, c.UIPayload, error) {
 }
 
 func (b *Button) Dimensions() (int, int) {
-	return int(b.height), int(b.width)
+	return int(b.width), int(b.height)
 }
 
 func (b *Button) GetComponentType() string {
@@ -86,4 +86,8 @@ func (b *Button) SetPos(x, y float32) {
 	b.y = int(y)
 	b.xR = b.x + int(b.width)
 	b.yB = b.y + int(b.height)
+}
+
+func (b *Button) Pos() (float32, float32) {
+	return float32(b.x), float32(b.y)
 }

@@ -78,3 +78,7 @@ func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport, selected bool) {
 func (h *HexTile) NewSystem() {
 	h.system = items.NewStellarSystem()
 }
+
+func (h *HexTile) GetSystem() *items.StellarSystem {
+	return h.system
+}

@@ -54,3 +54,11 @@ func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 		screen, float32(cx), float32(cy), float32(r),
 		s.starColor, false)
 }
+
+func (s *StellarSystem) StarName() string {
+	return s.starName
+}
+
+func (s *StellarSystem) StarType() string {
+	return s.starType
+}
