@@ -19,10 +19,10 @@ var colorNeutron color.RGBA = color.RGBA{255, 200, 255, 255}
 var colorRedDwarf color.RGBA = color.RGBA{225, 0, 0, 255}
 
 type StellarSystem struct {
-	starType  string
-	starColor color.Color
-	planets   []string
-	starName  string
+	StarType  string
+	StarColor color.Color
+	Planets   []string
+	StarName  string
 }
 
 func NewStellarSystem() *StellarSystem {
@@ -42,23 +42,15 @@ func NewStellarSystem() *StellarSystem {
 	}
 
 	return &StellarSystem{
-		starType:  types[0],
-		starColor: colors[0],
-		planets:   make([]string, 0),
-		starName:  "New Sol",
+		StarType:  types[0],
+		StarColor: colors[0],
+		Planets:   make([]string, 0),
+		StarName:  "New Sol",
 	}
 }
 
 func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 	vector.DrawFilledCircle(
 		screen, float32(cx), float32(cy), float32(r),
-		s.starColor, false)
-}
-
-func (s *StellarSystem) StarName() string {
-	return s.starName
-}
-
-func (s *StellarSystem) StarType() string {
-	return s.starType
+		s.StarColor, false)
 }

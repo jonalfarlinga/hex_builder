@@ -24,7 +24,7 @@ func (g *Game) inputUpdate(x, y int) error {
 				g.grid.SelectedHex.NewSystem()
 			}
 			log.Println(g.grid.SelectedHex.GetSystem())
-			g.activeModal = objects.NewSystemModal(g.grid.SelectedHex.GetSystem())
+			g.activeModal = objects.BuildSystemModal(g.grid.SelectedHex.GetSystem())
 		}
 		if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 			var clickedButton *objects.Button
@@ -40,7 +40,7 @@ func (g *Game) inputUpdate(x, y int) error {
 					return fmt.Errorf("button clicked %v: %s", clickedButton, err)
 				}
 				g.actionUpdate(action, payload)
-				} else if hex := g.grid.CollideWithGrid(float64(x), float64(y), g.viewport); hex != nil {
+			} else if hex := g.grid.CollideWithGrid(float64(x), float64(y), g.viewport); hex != nil {
 				if g.grid.SelectedHex == hex {
 					g.grid.SelectedHex = nil
 				} else {

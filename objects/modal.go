@@ -13,18 +13,18 @@ var prevClicked *bool = &c.PrevClicked
 type Modal struct {
 	x, y          float32
 	height, width float32
-	Components    []Component
-	focus         []bool
+	Components    map[int]Component
+	focus         Component
 	Padding       float32
 	Spacing       float32
 	Active        bool
 	image         *ebiten.Image
+	content       interface{}
 }
 
-func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
+func NewModal(x, y float32, height, width float32, comp map[int]Component) *Modal {
 	m := &Modal{
 		Components: comp,
-		focus:      make([]bool, len(comp)),
 		x:          x,
 		y:          y,
 		height:     height,
@@ -38,9 +38,8 @@ func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
 	return m
 }
 
-func (m *Modal) AddComponent(c Component) {
-	m.Components = append(m.Components, c)
-	m.focus = append(m.focus, false)
+func (m *Modal) AddComponent(id int, c Component) {
+	m.Components[id] = c
 	m.LayoutComponents()
 }
 
@@ -59,9 +58,9 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 		screen, m.x, m.y, m.width, m.height,
 		c.ModalColor, true)
 
-	for i, comp := range m.Components {
+	for _, comp := range m.Components {
 		comp.Draw(screen)
-		if m.focus[i] {
+		if m.focus == comp {
 			posx, posy := comp.Pos()
 			dimx, dimy := comp.Dimensions()
 			vector.StrokeRect(
@@ -76,11 +75,11 @@ func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		clicked = true
 	}
-	for i, comp := range m.Components {
-		if clicked {
-			m.focus[i] = comp.Collide(x, y)
+	for _, comp := range m.Components {
+		if clicked && comp.Collide(x, y) {
+			m.focus = comp
 		}
-		if m.focus[i] {
+		if m.focus != nil {
 			action, payload, err := comp.Update()
 			if err != nil {
 				return c.ActionNone, nil, fmt.Errorf("error updating %v: %s", comp, err)
