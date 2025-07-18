@@ -14,27 +14,28 @@ const (
 )
 
 func BuildSystemModal(system *items.StellarSystem) *Modal {
-	comps := make(map[int]Component)
-	comps[StarName] = NewTextBox(system.StarName, 0, 0, 50, 200)
-	comps[StarType] = NewTextBox(system.StarType, 0, 0, 50, 200)
-	comps[CloseButton] = NewButton(0, 0, 50, 100, "Close", c.ActionCloseModal)
+	components := make(map[int]Component)
+	components[StarName] = NewTextBox(system.StarName, 0, 0, 50, 200)
+	components[StarType] = NewTextBox(system.StarType, 0, 0, 50, 200)
+	components[CloseButton] = NewButton(0, 0, 50, 100, "Close", c.ActionCloseModal)
 
 	m := NewModal(
-		100, 100, 400, 400, comps,
+		100, 100, 400, 400, components,
 	)
 	m.content = system
 	return m
 }
 
-func (m *Modal) updateSystemContent() error {
-	system, ok := m.content.(*items.StellarSystem)
-	if !ok {
-		return fmt.Errorf("wrong Modal content")
-	}
+func (m *Modal) updateSystemContent(sys *items.StellarSystem) error {
 	nameField, ok := m.Components[StarName].(*TextBox)
 	if !ok {
-		return fmt.Errorf("bad nameField")
+		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[StarName])
 	}
-	system.StarName = nameField.Text
+	typeField, ok := m.Components[StarType].(*TextBox)
+	if !ok {
+		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[StarType])
+	}
+	sys.StarName = nameField.Text
+	sys.StarType = typeField.Text
 	return nil
 }

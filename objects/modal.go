@@ -3,6 +3,7 @@ package objects
 import (
 	"fmt"
 	c "hex_builder/common"
+	"hex_builder/objects/items"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -77,20 +78,32 @@ func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	}
 	for _, comp := range m.Components {
 		if clicked && comp.Collide(x, y) {
-			m.focus = comp
+			if m.focus != comp {
+				m.focus = comp
+			} else {
+				m.focus = nil
+			}
 		}
-		if m.focus != nil {
-			action, payload, err := comp.Update()
+	}
+	if m.focus != nil {
+		action, payload, err := m.focus.Update(x, y)
+		if err != nil {
+			return c.ActionNone, nil, fmt.Errorf("error updating %v: %s", m.focus, err)
+		}
+		switch action {
+		case c.ActionCloseModal:
+			var err error
+			system, ok := m.content.(*items.StellarSystem)
+			if ok {
+				err = m.updateSystemContent(system)
+			}
 			if err != nil {
-				return c.ActionNone, nil, fmt.Errorf("error updating %v: %s", comp, err)
+				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %s", err)
 			}
-			switch action {
-			case c.ActionCloseModal:
-				return c.ActionCloseModal, nil, nil
-			}
-			// handle action
-			fmt.Println(action, payload)
+			return c.ActionCloseModal, nil, nil
 		}
+		// handle action
+		fmt.Println(action, payload)
 	}
 	return c.ActionNone, nil, nil
 }

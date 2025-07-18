@@ -8,7 +8,7 @@ import (
 
 type Component interface {
 	Draw(*ebiten.Image)
-	Update() (c.UIAction, c.UIPayload, error)
+	Update(int, int) (c.UIAction, c.UIPayload, error)
 	Dimensions() (int, int)
 	SetPos(float32, float32)
 	Pos() (float32, float32)

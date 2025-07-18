@@ -38,7 +38,7 @@ func (t *TextBox) Draw(screen *ebiten.Image) {
 	text.Draw(screen, t.Text, c.MenuFont, int(t.x+7), int(t.y+30), color.White)
 }
 
-func (t *TextBox) Update() (c.UIAction, c.UIPayload, error) {
+func (t *TextBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	if !prevBackPressed && ebiten.IsKeyPressed(ebiten.KeyBackspace) && len(t.Text) > 0 {
 		t.Text = t.Text[:len(t.Text)-1]
 	}

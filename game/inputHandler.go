@@ -4,7 +4,6 @@ import (
 	"fmt"
 	c "hex_builder/common"
 	"hex_builder/objects"
-	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -23,24 +22,20 @@ func (g *Game) inputUpdate(x, y int) error {
 			if g.grid.SelectedHex.GetSystem() == nil {
 				g.grid.SelectedHex.NewSystem()
 			}
-			log.Println(g.grid.SelectedHex.GetSystem())
 			g.activeModal = objects.BuildSystemModal(g.grid.SelectedHex.GetSystem())
 		}
 		if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 			var clickedButton *objects.Button
 			for _, button := range g.buttons {
-				if button.Collide(x, y) {
-					clickedButton = button
-					break
-				}
-			}
-			if clickedButton != nil {
-				action, payload, err := clickedButton.Update()
+				action, payload, err := button.Update(x, y)
 				if err != nil {
 					return fmt.Errorf("button clicked %v: %s", clickedButton, err)
+				} else if action != c.ActionNone {
+					g.actionUpdate(action, payload)
+					return nil
 				}
-				g.actionUpdate(action, payload)
-			} else if hex := g.grid.CollideWithGrid(float64(x), float64(y), g.viewport); hex != nil {
+			}
+			if hex := g.grid.CollideWithGrid(float64(x), float64(y), g.viewport); hex != nil {
 				if g.grid.SelectedHex == hex {
 					g.grid.SelectedHex = nil
 				} else {
