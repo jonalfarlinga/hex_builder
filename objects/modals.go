@@ -14,11 +14,19 @@ const (
 )
 
 func BuildSystemModal(system *items.StellarSystem) *Modal {
-	components := make(map[int]Component)
-	components[StarName] = NewTextBox(system.StarName, 0, 0, 50, 200)
-	components[StarType] = NewTextBox(system.StarType, 0, 0, 50, 200)
-	components[CloseButton] = NewButton(0, 0, 50, 100, "Close", c.ActionCloseModal)
-
+	sel := 0
+	for i, typ := range items.StarTypes {
+		print(system.StarType, typ, "\n")
+		if typ == system.StarType {
+			sel = i
+			break
+		}
+	}
+	print(sel, "\n")
+	components := make([]Component, 3)
+	components[0] = NewTextBox(system.StarName, 0, 0, 50, 200)
+	components[1] = NewSelectBox(items.StarTypes[:], sel, 0, 0, 50, 200)
+	components[2] = NewButton(0, 0, 50, 100, "Close", c.ActionCloseModal)
 	m := NewModal(
 		100, 100, 400, 400, components,
 	)
@@ -31,11 +39,12 @@ func (m *Modal) updateSystemContent(sys *items.StellarSystem) error {
 	if !ok {
 		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[StarName])
 	}
-	typeField, ok := m.Components[StarType].(*TextBox)
+	typeField, ok := m.Components[StarType].(*SelectBox)
 	if !ok {
 		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[StarType])
 	}
 	sys.StarName = nameField.Text
-	sys.StarType = typeField.Text
+	sys.StarType = typeField.Value()
+	sys.StarColor = items.StarColorMap[sys.StarType]
 	return nil
 }

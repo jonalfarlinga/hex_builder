@@ -7,4 +7,5 @@ const (
 	ActionNone UIAction = iota
 	ActionClose
 	ActionCloseModal
+	ActionFocus
 )

@@ -2,7 +2,6 @@ package game
 
 import (
 	c "hex_builder/common"
-	"fmt"
 	"os"
 )
 
@@ -14,6 +13,5 @@ func (g *Game) actionUpdate(action c.UIAction, payload c.UIPayload) {
 		// serialize modal
 		g.activeModal = nil
 	default:
-		fmt.Println(payload)
 	}
 }

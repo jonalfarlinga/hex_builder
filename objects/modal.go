@@ -12,9 +12,10 @@ import (
 var prevClicked *bool = &c.PrevClicked
 
 type Modal struct {
+	id int
 	x, y          float32
 	height, width float32
-	Components    map[int]Component
+	Components    []Component
 	focus         Component
 	Padding       float32
 	Spacing       float32
@@ -23,7 +24,7 @@ type Modal struct {
 	content       interface{}
 }
 
-func NewModal(x, y float32, height, width float32, comp map[int]Component) *Modal {
+func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
 	m := &Modal{
 		Components: comp,
 		x:          x,
@@ -34,9 +35,14 @@ func NewModal(x, y float32, height, width float32, comp map[int]Component) *Moda
 		Spacing:    float32(c.ScreenHeight / 100),
 		Active:     true,
 		image:      ebiten.NewImage(int(width), int(height)),
+		id: c.ComponentIDS.Next(),
 	}
 	m.LayoutComponents()
 	return m
+}
+
+func (m *Modal) GetID() int {
+	return m.id
 }
 
 func (m *Modal) AddComponent(id int, c Component) {
@@ -61,49 +67,27 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 
 	for _, comp := range m.Components {
 		comp.Draw(screen)
-		if m.focus == comp {
-			posx, posy := comp.Pos()
-			dimx, dimy := comp.Dimensions()
-			vector.StrokeRect(
-				screen, posx, posy, float32(dimx), float32(dimy),
-				3, c.BGColor, true)
-		}
+	}
+	if m.focus != nil {
+		posx, posy := m.focus.Pos()
+		dimx, dimy := m.focus.Dimensions()
+		vector.StrokeRect(
+			screen, posx, posy, float32(dimx), float32(dimy),
+			3, c.BGColor, true)
 	}
 }
 
 func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
-	clicked := false
-	if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		clicked = true
-	}
+	click := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+
 	for _, comp := range m.Components {
-		if clicked && comp.Collide(x, y) {
-			if m.focus != comp {
-				m.focus = comp
-			} else {
-				m.focus = nil
-			}
-		}
-	}
-	if m.focus != nil {
-		action, payload, err := m.focus.Update(x, y)
-		if err != nil {
-			return c.ActionNone, nil, fmt.Errorf("error updating %v: %s", m.focus, err)
-		}
-		switch action {
-		case c.ActionCloseModal:
-			var err error
-			system, ok := m.content.(*items.StellarSystem)
-			if ok {
-				err = m.updateSystemContent(system)
-			}
+		if (click && comp.Collide(x, y)) || (!click && m.focus != nil && m.focus.GetID() == comp.GetID()) {
+			action, payload, err := comp.Update(x, y)
 			if err != nil {
-				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %s", err)
+				return c.ActionNone, nil, fmt.Errorf("error updating %v: %s", m.focus, err)
 			}
-			return c.ActionCloseModal, nil, nil
+			return m.handleModalAction(action, payload)
 		}
-		// handle action
-		fmt.Println(action, payload)
 	}
 	return c.ActionNone, nil, nil
 }
@@ -115,4 +99,29 @@ func (m *Modal) Collide(x, y int) bool {
 		return true
 	}
 	return false
+}
+
+func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIAction, c.UIPayload, error) {
+	switch action {
+	case c.ActionFocus:
+		if target, ok := payload.(Component); ok {
+			if m.focus != nil && m.focus.GetID() == target.GetID() {
+				m.focus = nil
+			} else {
+				m.focus = target
+			}
+		} else {
+			return c.ActionNone, nil, fmt.Errorf("not a Component")
+		}
+	case c.ActionCloseModal:
+		if system, ok := m.content.(*items.StellarSystem); ok {
+			if err := m.updateSystemContent(system); err != nil {
+				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %w", err)
+			}
+		}
+		return c.ActionCloseModal, nil, nil
+	default:
+		return action, payload, nil
+	}
+	return c.ActionNone, nil, nil
 }

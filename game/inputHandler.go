@@ -9,16 +9,17 @@ import (
 )
 
 var prevClicked *bool = &c.PrevClicked
+var prevSpacePressed bool = false
 
 func (g *Game) inputUpdate(x, y int) error {
-	if g.activeModal != nil {
+	if g.activeModal != nil && g.activeModal.Collide(x, y) {
 		action, payload, err := g.activeModal.Update(x, y)
 		if err != nil {
-			return fmt.Errorf("modal interaction: %s", err)
+			return fmt.Errorf("inputUpdate modal: %s", err)
 		}
 		g.actionUpdate(action, payload)
 	} else {
-		if ebiten.IsKeyPressed(ebiten.KeySpace) && g.grid.SelectedHex != nil {
+		if !prevSpacePressed && ebiten.IsKeyPressed(ebiten.KeySpace) && g.grid.SelectedHex != nil {
 			if g.grid.SelectedHex.GetSystem() == nil {
 				g.grid.SelectedHex.NewSystem()
 			}
@@ -44,6 +45,7 @@ func (g *Game) inputUpdate(x, y int) error {
 			}
 		}
 	}
+	prevSpacePressed = ebiten.IsKeyPressed(ebiten.KeySpace)
 	*prevClicked = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 	return nil
 }

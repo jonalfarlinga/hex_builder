@@ -11,6 +11,7 @@ import (
 )
 
 type Button struct {
+	id int
 	x, y, xR, yB  int
 	height, width float32
 	text          string
@@ -37,7 +38,12 @@ func NewButton(
 		hoverBG:    c.ButtonHover,
 		text:       text,
 		action:     action,
+		id: c.ComponentIDS.Next(),
 	}
+}
+
+func (b *Button) GetID() int {
+	return b.id
 }
 
 func (b *Button) Collide(x, y int) bool {

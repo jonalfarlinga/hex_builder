@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	c "hex_builder/common"
 	"hex_builder/debug"
 	"hex_builder/objects"
@@ -28,9 +29,16 @@ func NewGame(buttons []*objects.Button) *Game {
 }
 
 func (g *Game) Update() error {
-	g.viewport.Update()
+	var err error
+	err = g.viewport.Update()
+	if err != nil {
+		return fmt.Errorf("game update: %s", err)
+	}
 	x, y := ebiten.CursorPosition()
-	g.inputUpdate(x, y)
+	err = g.inputUpdate(x, y)
+	if err != nil {
+		return fmt.Errorf("game update: %s", err)
+	}
 	return nil
 }
 

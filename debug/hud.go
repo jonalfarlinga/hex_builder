@@ -23,10 +23,10 @@ func DebugDraw(screen *ebiten.Image, vp *grid.Viewport) {
 
 	msg := fmt.Sprintf(
 		"Screen: (%d, %d)\n"+
-			"World: (%.2f, %.2f)\n"+
-			"Hex: (q=%d, r=%d)\n"+
-			"Window Offset: (%.2f, %.2f)\n"+
-			"Window Scale: %.2f",
+		"World: (%.2f, %.2f)\n"+
+		"Hex: (q=%d, r=%d)\n"+
+		"Window Offset: (%.2f, %.2f)\n"+
+		"Window Scale: %.2f",
 		x, y, wx, wy, q, r, ox, oy, s,
 	)
 

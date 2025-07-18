@@ -7,6 +7,7 @@ import (
 )
 
 type Component interface {
+	GetID() int
 	Draw(*ebiten.Image)
 	Update(int, int) (c.UIAction, c.UIPayload, error)
 	Dimensions() (int, int)
@@ -17,6 +18,7 @@ type Component interface {
 }
 
 const (
-	ComponentTextBox string = "textbox"
-	ComponentButton string = "button"
+	ComponentTextBox   string = "textbox"
+	ComponentButton    string = "button"
+	ComponentSelectBox string = "select"
 )

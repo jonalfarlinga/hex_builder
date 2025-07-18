@@ -6,17 +6,35 @@
 package items
 
 import (
+	"fmt"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-var colorMainSequence color.RGBA = color.RGBA{255, 255, 60, 255}
-var colorRedGiant color.RGBA = color.RGBA{248, 65, 0, 255}
-var colorWhiteDwarf color.RGBA = color.RGBA{255, 255, 255, 255}
-var colorNeutron color.RGBA = color.RGBA{255, 200, 255, 255}
-var colorRedDwarf color.RGBA = color.RGBA{225, 0, 0, 255}
+const (
+	MainSequence string = "Main Sequence"
+	RedGiant     string = "Red Giant"
+	WhiteDwarf   string = "White Dwarf"
+	Neutron      string = "Neutron"
+	RedDwarf     string = "Red Dwarf"
+)
+
+var StarColorMap map[string]color.RGBA = map[string]color.RGBA{
+	MainSequence: {255, 255, 60, 255},
+	RedGiant:     {248, 65, 0, 255},
+	WhiteDwarf:   {255, 255, 255, 255},
+	Neutron:      {255, 200, 255, 255},
+	RedDwarf:     {225, 0, 0, 255},
+}
+var StarTypes [5]string = [5]string{
+	MainSequence,
+	RedGiant,
+	WhiteDwarf,
+	Neutron,
+	RedDwarf,
+}
 
 type StellarSystem struct {
 	StarType  string
@@ -26,24 +44,10 @@ type StellarSystem struct {
 }
 
 func NewStellarSystem() *StellarSystem {
-	colors := []color.Color{
-		colorMainSequence,
-		colorRedGiant,
-		colorWhiteDwarf,
-		colorNeutron,
-		colorRedDwarf,
-	}
-	types := []string{
-		"Main Sequence",
-		"Red Giant",
-		"White Dwarf",
-		"Neutron",
-		"Red Dwarf",
-	}
-
+	fmt.Printf("%v", StarTypes)
 	return &StellarSystem{
-		StarType:  types[0],
-		StarColor: colors[0],
+		StarType:  StarTypes[0],
+		StarColor: StarColorMap[StarTypes[0]],
 		Planets:   make([]string, 0),
 		StarName:  "New Sol",
 	}
