@@ -8,4 +8,5 @@ const (
 	ActionClose
 	ActionCloseModal
 	ActionFocus
+	ActionRandomCluster
 )

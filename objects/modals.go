@@ -8,40 +8,47 @@ import (
 
 const (
 	// SystemModal definitions
-	StarName int = iota
-	StarType
-	CloseButton
+	_ int = iota - 1
+	starName
+	starType
+	closeButton
+	hexLocation
 )
 
-func BuildSystemModal(system *items.StellarSystem) *Modal {
-	sel := 0
+func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
+	var sel int
 	for i, typ := range items.StarTypes {
-		print(system.StarType, typ, "\n")
 		if typ == system.StarType {
 			sel = i
 			break
 		}
 	}
-	print(sel, "\n")
-	components := make([]Component, 3)
-	components[0] = NewTextBox(system.StarName, 0, 0, 50, 200)
-	components[1] = NewSelectBox(items.StarTypes[:], sel, 0, 0, 50, 200)
-	components[2] = NewButton(0, 0, 50, 100, "Close", c.ActionCloseModal)
-	m := NewModal(
-		100, 100, 400, 400, components,
-	)
+	components := make([]Component, 4)
+	components[starName] = NewTextBox(
+		system.StarName,
+		0, 0, 50, 200)
+	components[starType] = NewSelectBox(
+		items.StarTypes[:], sel,
+		0, 0, 50, 200)
+	components[closeButton] = NewButton(
+		"Close", c.ActionCloseModal,
+		0, 0, 50, 100)
+	components[hexLocation] = NewLabel(
+		fmt.Sprintf("Location: Q: %d R: %d", q, r),
+		0, 0, 50, 200)
+	m := NewModal(100, 100, 400, 400, components)
 	m.content = system
 	return m
 }
 
 func (m *Modal) updateSystemContent(sys *items.StellarSystem) error {
-	nameField, ok := m.Components[StarName].(*TextBox)
+	nameField, ok := m.Components[starName].(*TextBox)
 	if !ok {
-		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[StarName])
+		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[starName])
 	}
-	typeField, ok := m.Components[StarType].(*SelectBox)
+	typeField, ok := m.Components[starType].(*SelectBox)
 	if !ok {
-		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[StarType])
+		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[starType])
 	}
 	sys.StarName = nameField.Text
 	sys.StarType = typeField.Value()

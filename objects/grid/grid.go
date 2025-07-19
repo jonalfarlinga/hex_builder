@@ -2,6 +2,9 @@ package grid
 
 import (
 	c "hex_builder/common"
+	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type HexGrid struct {
@@ -42,14 +45,17 @@ func (g *HexGrid) CollideWithGrid(x, y float64, vp *Viewport) *HexTile {
 	return tile
 }
 
-// func (g *HexGrid) DrawHighlightHexTile(screen *ebiten.Image, vp *Viewport) {
-// 	x, y := ebiten.CursorPosition()
-// 	selected := g.CollideWithGrid(float64(x), float64(y), vp)
-// 	if selected != nil {
-// 		cx, cy := selected.Pixel(vp)
-// 		vector.DrawFilledCircle(
-// 			screen, float32(cx), float32(cy),
-// 			10, color.RGBA{255, 0, 0, 255}, false,
-// 		)
-// 	}
-// }
+func (g *HexGrid) Draw(vp *Viewport, screen *ebiten.Image) {
+	for _, tile := range g.Grid {
+		tile.Draw(screen, vp, tile == g.SelectedHex)
+	}
+}
+
+func (g *HexGrid) Randomize(density float32) {
+	for _, hex := range g.Grid {
+		r := rand.Float32()
+		if r <= density {
+			hex.NewSystem()
+		}
+	}
+}

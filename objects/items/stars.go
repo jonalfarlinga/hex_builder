@@ -6,8 +6,9 @@
 package items
 
 import (
-	"fmt"
 	"image/color"
+	"math/rand"
+	c "hex_builder/common"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -44,12 +45,12 @@ type StellarSystem struct {
 }
 
 func NewStellarSystem() *StellarSystem {
-	fmt.Printf("%v", StarTypes)
+	sType := StarTypes[rand.Intn(5)]
 	return &StellarSystem{
-		StarType:  StarTypes[0],
-		StarColor: StarColorMap[StarTypes[0]],
+		StarType:  sType,
+		StarColor: StarColorMap[sType],
 		Planets:   make([]string, 0),
-		StarName:  "New Sol",
+		StarName:  c.GetStarName(),
 	}
 }
 

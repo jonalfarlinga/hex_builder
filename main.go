@@ -22,11 +22,17 @@ func main() {
 func menuButtons() []*objects.Button {
 	buttons := make([]*objects.Button, 0)
 	buttons = append(buttons, objects.NewButton(
-		c.ScreenWidth-150, 50, 50, 100, "X", c.ActionClose,
+		"X", c.ActionClose,
+		c.ScreenWidth-150, 50, 50, 100,
+	))
+	buttons = append(buttons, objects.NewButton(
+		"Randomize", c.ActionRandomCluster,
+		c.ScreenWidth-200, c.ScreenHeight-150, 50, 150,
 	))
 	return buttons
 }
 
 func initGlobal() {
 	c.InitColor()
+	c.LoadData(0)
 }

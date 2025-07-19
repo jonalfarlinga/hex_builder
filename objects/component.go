@@ -21,4 +21,5 @@ const (
 	ComponentTextBox   string = "textbox"
 	ComponentButton    string = "button"
 	ComponentSelectBox string = "select"
+	ComponentLabel     string = "label"
 )

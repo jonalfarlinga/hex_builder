@@ -23,20 +23,23 @@ func (g *Game) inputUpdate(x, y int) error {
 			if g.grid.SelectedHex.GetSystem() == nil {
 				g.grid.SelectedHex.NewSystem()
 			}
-			g.activeModal = objects.BuildSystemModal(g.grid.SelectedHex.GetSystem())
+			sys := g.grid.SelectedHex.GetSystem()
+			q, r := g.grid.SelectedHex.Coords()
+			g.activeModal = objects.BuildSystemModal(sys, q, r)
 		}
 		if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-			var clickedButton *objects.Button
 			for _, button := range g.buttons {
 				action, payload, err := button.Update(x, y)
 				if err != nil {
-					return fmt.Errorf("button clicked %v: %s", clickedButton, err)
+					return fmt.Errorf("button clicked %v: %s", button, err)
 				} else if action != c.ActionNone {
 					g.actionUpdate(action, payload)
 					return nil
 				}
 			}
-			if hex := g.grid.CollideWithGrid(float64(x), float64(y), g.viewport); hex != nil {
+			if hex := g.grid.CollideWithGrid(
+				float64(x), float64(y), g.viewport,
+			); hex != nil {
 				if g.grid.SelectedHex == hex {
 					g.grid.SelectedHex = nil
 				} else {

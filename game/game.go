@@ -43,7 +43,7 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.viewport.Draw(g.grid, screen)
+	g.grid.Draw(g.viewport, screen)
 	for _, b := range g.buttons {
 		b.Draw(screen)
 	}

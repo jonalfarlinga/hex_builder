@@ -2,7 +2,10 @@ module hex_builder
 
 go 1.22.4
 
-require github.com/hajimehoshi/ebiten/v2 v2.8.8
+require (
+	github.com/hajimehoshi/ebiten/v2 v2.8.8
+	github.com/pelletier/go-toml v1.9.5
+)
 
 require (
 	github.com/ebitengine/gomobile v0.0.0-20240911145611-4856209ac325 // indirect

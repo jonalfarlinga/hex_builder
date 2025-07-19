@@ -12,6 +12,8 @@ func (g *Game) actionUpdate(action c.UIAction, payload c.UIPayload) {
 	case c.ActionCloseModal:
 		// serialize modal
 		g.activeModal = nil
+	case c.ActionRandomCluster:
+		g.grid.Randomize(0.2)
 	default:
 	}
 }

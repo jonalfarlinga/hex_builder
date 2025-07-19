@@ -82,3 +82,7 @@ func (h *HexTile) NewSystem() {
 func (h *HexTile) GetSystem() *items.StellarSystem {
 	return h.system
 }
+
+func (h *HexTile) Coords() (int, int) {
+	return h.q, h.r
+}

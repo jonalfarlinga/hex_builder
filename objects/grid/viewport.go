@@ -22,9 +22,7 @@ func NewViewport() *Viewport {
 }
 
 func (vp *Viewport) Draw(hg *HexGrid, dst *ebiten.Image) {
-	for _, tile := range hg.Grid {
-		tile.Draw(dst, vp, tile == hg.SelectedHex)
-	}
+	
 }
 
 func (vp *Viewport) Update() error {
