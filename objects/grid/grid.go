@@ -56,6 +56,18 @@ func (g *HexGrid) Randomize(density float32) {
 		r := rand.Float32()
 		if r <= density {
 			hex.NewSystem()
+		} else {
+			hex.DeleteSystem()
 		}
+	}
+}
+
+func (g *HexGrid) DeleteSystem(loc [2]int) {
+	g.Grid[loc].DeleteSystem()
+}
+
+func (g *HexGrid) DeleteAllSystems() {
+	for _, h := range g.Grid {
+		h.DeleteSystem()
 	}
 }

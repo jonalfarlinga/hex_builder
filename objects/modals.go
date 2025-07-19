@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	// SystemModal definitions
-	_ int = iota - 1
+	SystemModalDefinitions int = iota - 1
 	starName
 	starType
-	closeButton
 	hexLocation
+	closeButton
+	deleteButton
 )
 
 func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
@@ -23,7 +23,7 @@ func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
 			break
 		}
 	}
-	components := make([]Component, 4)
+	components := make([]Component, 5)
 	components[starName] = NewTextBox(
 		system.StarName,
 		0, 0, 50, 200)
@@ -36,6 +36,11 @@ func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
 	components[hexLocation] = NewLabel(
 		fmt.Sprintf("Location: Q: %d R: %d", q, r),
 		0, 0, 50, 200)
+	b := NewButton(
+		"Delete", c.ActionDeleteSystem,
+		0, 0, 50, 100)
+	b.SetPayload([2]int{q,r})
+	components[deleteButton] = b
 	m := NewModal(100, 100, 400, 400, components)
 	m.content = system
 	return m
@@ -54,4 +59,27 @@ func (m *Modal) updateSystemContent(sys *items.StellarSystem) error {
 	sys.StarType = typeField.Value()
 	sys.StarColor = items.StarColorMap[sys.StarType]
 	return nil
+}
+
+const (
+	ConfirmModalDefinitions int = iota -1
+	confirmLabel
+	yesButton
+	noButton
+)
+
+func BuildConfirmModal(query string, payload c.UIAction) *Modal {
+	components := make([]Component, 3)
+	components[confirmLabel] = NewLabel(
+		query, 0, 0, 50, 380)
+	components[yesButton] = NewButton(
+		"Yes", payload,
+		0, 0, 50, 100)
+	components[noButton] = NewButton(
+		"No", c.ActionCloseModal,
+		0,0, 50, 100)
+	return NewModal(
+		float32(c.ScreenWidth)/2-200, float32(c.ScreenHeight)/2-100,
+		200, 400, components,
+	)
 }

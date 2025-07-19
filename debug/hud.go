@@ -21,13 +21,20 @@ func DebugDraw(screen *ebiten.Image, vp *grid.Viewport) {
 
 	q, r := c.PixelToAxial(wx, wy)
 
+	// Add current FPS
+	fps := ebiten.ActualTPS()
+
+	clicked := c.PrevClicked
+
 	msg := fmt.Sprintf(
 		"Screen: (%d, %d)\n"+
 			"World: (%.2f, %.2f)\n"+
 			"Hex: (q=%d, r=%d)\n"+
 			"Window Offset: (%.2f, %.2f)\n"+
-			"Window Scale: %.2f",
-		x, y, wx, wy, q, r, ox, oy, s,
+			"Window Scale: %.2f\n"+
+			"FPS: %.2f\n"+
+			"Clicked: %t\n",
+		x, y, wx, wy, q, r, ox, oy, s, fps, clicked,
 	)
 
 	text.Draw(screen, msg, basicfont.Face7x13, 10, 20, c.TextColor)

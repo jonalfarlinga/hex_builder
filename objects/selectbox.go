@@ -15,12 +15,19 @@ type SelectBox struct {
 	selection     int
 	x, y          float32
 	height, width float32
+	prev, next    *Button
 }
 
 var _ Component = (*SelectBox)(nil)
 var _ c.Interactable = (*SelectBox)(nil)
 
 func NewSelectBox(ops []string, sel int, x, y, height, width float32) *SelectBox {
+	p := NewButton(
+		"<", c.ActionSelectPrev, 0, 0, height-2, height-2,
+	)
+	n := NewButton(
+		">", c.ActionSelectNext, 0, 0, height-2, height-2,
+	)
 	return &SelectBox{
 		Options:   ops,
 		x:         x,
@@ -29,6 +36,8 @@ func NewSelectBox(ops []string, sel int, x, y, height, width float32) *SelectBox
 		width:     width,
 		id:        c.ComponentIDS.Next(),
 		selection: sel,
+		prev: p,
+		next: n,
 	}
 }
 
@@ -40,38 +49,33 @@ func (s *SelectBox) Value() string {
 }
 
 func (s *SelectBox) Draw(screen *ebiten.Image) {
-	var cursorX, cursorY float32 = 0.0, 0.0
+	s.prev.Draw(screen)
+	s.next.Draw(screen)
 	vector.DrawFilledRect(
-		screen, s.x+cursorX+1, s.y+cursorY+1, s.height-2, s.height-2,
-		c.ButtonColor, true)
-	text.Draw(screen, "<", c.MenuFont, int(s.x+cursorX+s.height/2), int(s.y+cursorY+s.height/2), color.White)
-	cursorX += s.height
-	vector.DrawFilledRect(
-		screen, s.x+cursorX+1, s.y+cursorY+1, s.height-2, s.height-2,
-		c.ButtonColor, true)
-	text.Draw(screen, ">", c.MenuFont, int(s.x+cursorX+s.height/2), int(s.y+cursorY+s.height/2), color.White)
-	cursorX += s.height
-	vector.DrawFilledRect(
-		screen, s.x+cursorX+1, s.y+cursorY, s.width-cursorX-1, s.height,
+		screen, s.x+2*s.height+1, s.y, s.width-2*s.height-1, s.height,
 		c.TextBoxColor, true)
-	text.Draw(screen, s.Options[s.selection], c.MenuFont, int(s.x+cursorX)+7, int(s.y+cursorY)+30, color.White)
+	text.Draw(screen, s.Options[s.selection], c.MenuFont, int(s.x+2*s.height)+7, int(s.y)+30, color.White)
 }
 
 func (s *SelectBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {
-	if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		if s.Collide(x, y) {
-			if x < int(s.x+s.height) {
-				// back button
-				s.selection--
-				if s.selection < 0 {
-					s.selection = len(s.Options) - 1
-				}
-			} else if x < int(s.x+2*s.height) {
-				s.selection++
-				if s.selection >= len(s.Options) {
-					s.selection = 0
-				}
-			}
+	action, _, err := s.prev.Update(x,y)
+	if err != nil {
+		return c.ActionNone, nil, err
+	}
+	if action == c.ActionSelectPrev {
+		s.selection--
+		if s.selection < 0 {
+			s.selection = len(s.Options) - 1
+		}
+	}
+	action, _, err = s.next.Update(x,y)
+	if err != nil {
+		return c.ActionNone, nil, err
+	}
+	if action == c.ActionSelectNext {
+		s.selection++
+		if s.selection >= len(s.Options) {
+			s.selection = 0
 		}
 	}
 	return c.ActionNone, nil, nil
@@ -84,6 +88,8 @@ func (s *SelectBox) Dimensions() (int, int) {
 func (s *SelectBox) SetPos(x, y float32) {
 	s.x = x
 	s.y = y
+	s.prev.SetPos(s.x+1, s.y+1)
+	s.next.SetPos(s.x+s.height+1, s.y+1)
 }
 
 func (s *SelectBox) Collide(x, y int) bool {

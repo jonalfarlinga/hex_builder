@@ -34,6 +34,10 @@ func (h *HexTile) Pixel(vp *Viewport) (float64, float64) {
 func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport, selected bool) {
 	cx, cy := h.Pixel(vp)
 	size := c.HexRadius * vp.Scale
+	if cx+c.HexRadius < 0 || cx-c.HexRadius > float64(c.ScreenWidth) ||
+    	cy+c.HexRadius < 0 || cy-c.HexRadius > float64(c.ScreenHeight) {
+    	return // skip drawing
+    }
 	var path vector.Path
 	const sides = 6
 	angleStep := 2 * math.Pi / sides
@@ -85,4 +89,8 @@ func (h *HexTile) GetSystem() *items.StellarSystem {
 
 func (h *HexTile) Coords() (int, int) {
 	return h.q, h.r
+}
+
+func (h *HexTile) DeleteSystem() {
+	h.system = nil
 }

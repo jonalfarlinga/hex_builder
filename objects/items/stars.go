@@ -6,9 +6,9 @@
 package items
 
 import (
+	c "hex_builder/common"
 	"image/color"
 	"math/rand"
-	c "hex_builder/common"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -45,7 +45,17 @@ type StellarSystem struct {
 }
 
 func NewStellarSystem() *StellarSystem {
-	sType := StarTypes[rand.Intn(5)]
+	r := rand.Float32()
+	weights := []float32{0.15, 0.02, 0.07, 0.01, 0.75}
+	var prop float32
+	var sType string
+	for i, w := range weights {
+		prop += w
+		if r < prop {
+			sType = StarTypes[i]
+			break
+		}
+	}
 	return &StellarSystem{
 		StarType:  sType,
 		StarColor: StarColorMap[sType],

@@ -12,6 +12,8 @@ var prevClicked *bool = &c.PrevClicked
 var prevSpacePressed bool = false
 
 func (g *Game) inputUpdate(x, y int) error {
+	clicked := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+	defer func() {*prevClicked = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)}()
 	if g.activeModal != nil && g.activeModal.Collide(x, y) {
 		action, payload, err := g.activeModal.Update(x, y)
 		if err != nil {
@@ -27,7 +29,7 @@ func (g *Game) inputUpdate(x, y int) error {
 			q, r := g.grid.SelectedHex.Coords()
 			g.activeModal = objects.BuildSystemModal(sys, q, r)
 		}
-		if *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		if clicked {
 			for _, button := range g.buttons {
 				action, payload, err := button.Update(x, y)
 				if err != nil {
@@ -49,6 +51,5 @@ func (g *Game) inputUpdate(x, y int) error {
 		}
 	}
 	prevSpacePressed = ebiten.IsKeyPressed(ebiten.KeySpace)
-	*prevClicked = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 	return nil
 }

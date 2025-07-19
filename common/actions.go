@@ -9,4 +9,8 @@ const (
 	ActionCloseModal
 	ActionFocus
 	ActionRandomCluster
+	ActionSelectPrev
+	ActionSelectNext
+	ActionDeleteSystem
+	ActionClearCluster
 )

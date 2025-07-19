@@ -100,3 +100,7 @@ func (b *Button) SetPos(x, y float32) {
 func (b *Button) Pos() (float32, float32) {
 	return float32(b.x), float32(b.y)
 }
+
+func (b *Button) SetPayload(p c.UIPayload) {
+	b.payload = p
+}

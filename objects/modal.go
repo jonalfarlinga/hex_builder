@@ -12,16 +12,17 @@ import (
 var prevClicked *bool = &c.PrevClicked
 
 type Modal struct {
-	id int
-	x, y          float32
-	height, width float32
-	Components    []Component
-	focus         Component
-	Padding       float32
-	Spacing       float32
-	Active        bool
-	image         *ebiten.Image
-	content       interface{}
+	id             int
+	x, y           float32
+	height, width  float32
+	Components     []Component
+	focus          Component
+	Padding        float32
+	Spacing        float32
+	Active         bool
+	image          *ebiten.Image
+	content        interface{}
+	activeSubmodal *Modal
 }
 
 func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
@@ -35,7 +36,7 @@ func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
 		Spacing:    float32(c.ScreenHeight / 100),
 		Active:     true,
 		image:      ebiten.NewImage(int(width), int(height)),
-		id: c.ComponentIDS.Next(),
+		id:         c.ComponentIDS.Next(),
 	}
 	m.LayoutComponents()
 	return m
@@ -80,6 +81,17 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	click := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 
+	if m.activeSubmodal != nil {
+		action, payload, err := m.activeSubmodal.Update(x,y)
+		if err != nil {
+			return c.ActionNone, nil, fmt.Errorf("submodal update: %s", err)
+		} else if action == c.ActionCloseModal {
+			m.activeSubmodal = nil
+			return c.ActionNone, nil, nil
+		} else {
+			return action, payload, nil
+		}
+	}
 	for _, comp := range m.Components {
 		if (click && comp.Collide(x, y)) || (!click && m.focus != nil && m.focus.GetID() == comp.GetID()) {
 			action, payload, err := comp.Update(x, y)

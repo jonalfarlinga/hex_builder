@@ -29,6 +29,10 @@ func menuButtons() []*objects.Button {
 		"Randomize", c.ActionRandomCluster,
 		c.ScreenWidth-200, c.ScreenHeight-150, 50, 150,
 	))
+	buttons = append(buttons, objects.NewButton(
+		"Clear", c.ActionClearCluster,
+		c.ScreenWidth-400, c.ScreenHeight-150, 50, 150,
+	))
 	return buttons
 }
 
