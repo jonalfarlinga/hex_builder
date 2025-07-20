@@ -2,18 +2,17 @@ package objects
 
 import (
 	c "hex_builder/common"
-	"image/color"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 var prevBackPressed bool = false
 
 type TextBox struct {
-	id int
+	id            int
 	Text          string
 	x, y          float32
 	height, width float32
@@ -24,12 +23,12 @@ var _ c.Interactable = (*TextBox)(nil)
 
 func NewTextBox(defaultText string, x, y, height, width float32) *TextBox {
 	return &TextBox{
-		Text:          defaultText,
-		x:             x,
-		y:             y,
-		height:        height,
-		width:         width,
-		id: c.ComponentIDS.Next(),
+		Text:   defaultText,
+		x:      x,
+		y:      y,
+		height: height,
+		width:  width,
+		id:     c.ComponentIDS.Next(),
 	}
 }
 
@@ -41,7 +40,13 @@ func (t *TextBox) Draw(screen *ebiten.Image) {
 	vector.DrawFilledRect(
 		screen, t.x, t.y, t.width, t.height,
 		c.TextBoxColor, true)
-	text.Draw(screen, t.Text, c.MenuFont, int(t.x+7), int(t.y+30), color.White)
+	var opts = c.LeftTextOpts
+	opts.GeoM.Reset()
+	opts.GeoM.Translate(
+		float64(t.x+7),
+		float64(t.y)+float64(t.height)/2,
+	)
+	text.Draw(screen, t.Text, c.TextFace16, opts)
 }
 
 func (t *TextBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {

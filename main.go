@@ -38,5 +38,6 @@ func menuButtons() []*objects.Button {
 
 func initGlobal() {
 	c.InitColor()
+	c.InitText()
 	c.LoadData(0)
 }

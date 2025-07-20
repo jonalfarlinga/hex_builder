@@ -5,9 +5,8 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	"golang.org/x/image/font"
 )
 
 type Button struct {
@@ -55,24 +54,23 @@ func (b *Button) Collide(x, y int) bool {
 }
 
 func (b *Button) Draw(screen *ebiten.Image) {
-	buttonColor := b.background
+	bg := b.background
 	x, y := ebiten.CursorPosition()
 	if b.Collide(x, y) {
-		buttonColor = b.hoverBG
+		bg = b.hoverBG
 	}
 
 	vector.DrawFilledRect(
 		screen, float32(b.x), float32(b.y),
-		b.width, b.height, buttonColor, false,
+		b.width, b.height, bg, false,
 	)
-
-	bounds := font.MeasureString(c.MenuFont, b.text)
-	textX := float32(b.x) + (b.width-float32(bounds.Floor()))/2
-	text.Draw(
-		screen, b.text, c.MenuFont,
-		int(textX), int(float32(b.y)+b.height/2+5),
-		color.White,
-	)
+	var opts = c.CenterTextOpts
+	opts.GeoM.Reset()
+    opts.GeoM.Translate(
+        float64(b.x)+float64(b.width)/2,
+        float64(b.y)+float64(b.height)/2,
+    )
+    text.Draw(screen, b.text, c.TextFace24, opts)
 }
 
 func (b *Button) Update(x, y int) (c.UIAction, c.UIPayload, error) {

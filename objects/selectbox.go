@@ -2,10 +2,9 @@ package objects
 
 import (
 	c "hex_builder/common"
-	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
@@ -36,8 +35,8 @@ func NewSelectBox(ops []string, sel int, x, y, height, width float32) *SelectBox
 		width:     width,
 		id:        c.ComponentIDS.Next(),
 		selection: sel,
-		prev: p,
-		next: n,
+		prev:      p,
+		next:      n,
 	}
 }
 
@@ -54,11 +53,17 @@ func (s *SelectBox) Draw(screen *ebiten.Image) {
 	vector.DrawFilledRect(
 		screen, s.x+2*s.height+1, s.y, s.width-2*s.height-1, s.height,
 		c.TextBoxColor, true)
-	text.Draw(screen, s.Options[s.selection], c.MenuFont, int(s.x+2*s.height)+7, int(s.y)+30, color.White)
+	var opts = c.LeftTextOpts
+	opts.GeoM.Reset()
+	opts.GeoM.Translate(
+		float64(s.x+2*s.height+7),
+		float64(s.y)+float64(s.height)/2,
+	)
+	text.Draw(screen, s.Options[s.selection], c.TextFace16, opts)
 }
 
 func (s *SelectBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {
-	action, _, err := s.prev.Update(x,y)
+	action, _, err := s.prev.Update(x, y)
 	if err != nil {
 		return c.ActionNone, nil, err
 	}
@@ -68,7 +73,7 @@ func (s *SelectBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 			s.selection = len(s.Options) - 1
 		}
 	}
-	action, _, err = s.next.Update(x,y)
+	action, _, err = s.next.Update(x, y)
 	if err != nil {
 		return c.ActionNone, nil, err
 	}

@@ -2,10 +2,9 @@ package objects
 
 import (
 	c "hex_builder/common"
-	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
 type Label struct {
@@ -34,7 +33,13 @@ func (l *Label) GetID() int {
 }
 
 func (l *Label) Draw(screen *ebiten.Image) {
-	text.Draw(screen, l.Text, c.MenuFont, int(l.x+7), int(l.y+30), color.White)
+	var opts = c.LeftTextOpts
+	opts.GeoM.Reset()
+	opts.GeoM.Translate(
+		float64(l.x+7),
+		float64(l.y)+float64(l.height)/2,
+	)
+	text.Draw(screen, l.Text, c.TextFace16, opts)
 }
 
 func (l *Label) Update(x, y int) (c.UIAction, c.UIPayload, error) {

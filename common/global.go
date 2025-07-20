@@ -1,10 +1,12 @@
 package common
 
 import (
+	"bytes"
+	"hex_builder/assets"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"golang.org/x/image/font/basicfont"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
 var WhitePixel = ebiten.NewImage(1, 1)
@@ -15,9 +17,6 @@ var TextBoxColor color.RGBA
 var ModalColor color.RGBA
 var ButtonColor color.RGBA
 var ButtonHover color.RGBA
-var (
-	MenuFont = basicfont.Face7x13
-)
 var PrevClicked bool = false
 
 func InitColor() {
@@ -29,4 +28,48 @@ func InitColor() {
 	ModalColor = color.RGBA{0, 50, 200, 200}
 	ButtonColor = color.RGBA{180, 180, 0, 200}
 	ButtonHover = color.RGBA{210, 210, 0, 200}
+}
+
+var GenosFaceSource *text.GoTextFaceSource
+var TextFace24 *text.GoTextFace
+var TextFace16 *text.GoTextFace
+var CenterTextOpts *text.DrawOptions
+var LeftTextOpts *text.DrawOptions
+
+func InitText() {
+	f, err := text.NewGoTextFaceSource(bytes.NewReader(assets.TextFontBytes))
+	if err != nil {
+		panic(err)
+	}
+	GenosFaceSource = f
+
+	TextFace24 = &text.GoTextFace{Source: GenosFaceSource, Size: 24} // customizable
+	TextFace24.SetVariation(text.MustParseTag("wght"), 400)
+	TextFace16 = &text.GoTextFace{Source: GenosFaceSource, Size: 16}
+	TextFace16.SetVariation(text.MustParseTag("wght"), 300)
+
+	CenterTextOpts = &text.DrawOptions{
+		LayoutOptions: text.LayoutOptions{
+			PrimaryAlign:   text.AlignCenter,
+			SecondaryAlign: text.AlignCenter,
+		},
+		DrawImageOptions: ebiten.DrawImageOptions{
+			ColorScale: ebiten.ColorScale{},
+		},
+	}
+	CenterTextOpts.ColorScale.Reset()
+	CenterTextOpts.ColorScale.ScaleWithColor(TextColor)
+	CenterTextOpts.ColorScale.SetA(1.0)
+
+	LeftTextOpts = &text.DrawOptions{
+		LayoutOptions: text.LayoutOptions{
+			SecondaryAlign: text.AlignCenter,
+		},
+		DrawImageOptions: ebiten.DrawImageOptions{
+			ColorScale: ebiten.ColorScale{},
+		},
+	}
+	LeftTextOpts.ColorScale.Reset()
+	LeftTextOpts.ColorScale.ScaleWithColor(TextColor)
+	LeftTextOpts.ColorScale.SetA(1.0)
 }

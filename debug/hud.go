@@ -6,8 +6,7 @@ import (
 	"hex_builder/objects/grid"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
-	"golang.org/x/image/font/basicfont"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
 func DebugDraw(screen *ebiten.Image, vp *grid.Viewport) {
@@ -26,16 +25,23 @@ func DebugDraw(screen *ebiten.Image, vp *grid.Viewport) {
 
 	clicked := c.PrevClicked
 
-	msg := fmt.Sprintf(
-		"Screen: (%d, %d)\n"+
-			"World: (%.2f, %.2f)\n"+
-			"Hex: (q=%d, r=%d)\n"+
-			"Window Offset: (%.2f, %.2f)\n"+
-			"Window Scale: %.2f\n"+
-			"FPS: %.2f\n"+
-			"Clicked: %t\n",
-		x, y, wx, wy, q, r, ox, oy, s, fps, clicked,
-	)
+	h := c.TextFace24.Metrics().CapHeight
+	cursorY := h+3
+	var opts = c.LeftTextOpts
+	opts.GeoM.Reset()
+	opts.GeoM.Translate(2, h+2)
 
-	text.Draw(screen, msg, basicfont.Face7x13, 10, 20, c.TextColor)
+	msgs := []string{
+		fmt.Sprintf("Screen: (%d, %d)\n", x, y),
+		fmt.Sprintf("World: (%.2f, %.2f)\n", wx, wy),
+		fmt.Sprintf("Hex: (q=%d, r=%d)\n", q,r),
+		fmt.Sprintf("Window Offset: (%.2f, %.2f)\n", ox, oy),
+		fmt.Sprintf("Window Scale: %.2f\n", s),
+		fmt.Sprintf("FPS: %.2f\n", fps),
+		fmt.Sprintf("Clicked: %t\n", clicked),
+	}
+	for _, msg := range msgs {
+		text.Draw(screen, msg, c.TextFace24, opts)
+		opts.GeoM.Translate(0, cursorY)
+	}
 }
