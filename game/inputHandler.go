@@ -14,6 +14,7 @@ var prevSpacePressed bool = false
 func (g *Game) inputUpdate(x, y int) error {
 	clicked := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 	defer func() {*prevClicked = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)}()
+
 	if g.activeModal != nil && g.activeModal.Collide(x, y) {
 		action, payload, err := g.activeModal.Update(x, y)
 		if err != nil {

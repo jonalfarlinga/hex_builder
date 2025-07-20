@@ -1,17 +1,32 @@
 package items
 
-import "image/color"
+import (
+	"image/color"
+	"math/rand"
+)
 
 type Planet struct {
-	planetType  string
+	planetClass string
 	planetColor color.Color
-	planetName string
+	planetName  string
 }
 
-func NewPlanet() *Planet {
+func NewPlanet(name string, starType string) *Planet {
+	r := rand.Float32()
+	weights := PlanetTypeDistributions[starType]
+	var prop float32
+	var pc int
+	var w float32
+	for pc, w = range weights {
+		prop += w
+		if r < prop {
+			break
+		}
+	}
+	class := PlanetTypes[pc]
 	return &Planet{
-		planetType: "M-class",
-		planetColor: color.RGBA{25, 25, 255, 255},
-		planetName: "New Earth",
+		planetClass: class,
+		planetColor: PlanetColorMap[class],
+		planetName:  name,
 	}
 }

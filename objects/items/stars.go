@@ -1,11 +1,7 @@
-// Main Sequence
-// Red Giant
-// White dwarf
-// Neutron
-// Red Dwarf
 package items
 
 import (
+	"fmt"
 	c "hex_builder/common"
 	"image/color"
 	"math/rand"
@@ -14,33 +10,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-const (
-	MainSequence string = "Main Sequence"
-	RedGiant     string = "Red Giant"
-	WhiteDwarf   string = "White Dwarf"
-	Neutron      string = "Neutron"
-	RedDwarf     string = "Red Dwarf"
-)
-
-var StarColorMap map[string]color.RGBA = map[string]color.RGBA{
-	MainSequence: {255, 255, 60, 255},
-	RedGiant:     {248, 65, 0, 255},
-	WhiteDwarf:   {255, 255, 255, 255},
-	Neutron:      {255, 200, 255, 255},
-	RedDwarf:     {225, 0, 0, 255},
-}
-var StarTypes [5]string = [5]string{
-	MainSequence,
-	RedGiant,
-	WhiteDwarf,
-	Neutron,
-	RedDwarf,
-}
-
 type StellarSystem struct {
 	StarType  string
 	StarColor color.Color
-	Planets   []string
+	Planets   []*Planet
 	StarName  string
 }
 
@@ -56,11 +29,27 @@ func NewStellarSystem() *StellarSystem {
 			break
 		}
 	}
+	sName := c.GetStarName()
+	r = rand.Float32()
+	weights = PlanetDistributions[sType]
+	var w float32
+	var n int
+	for n, w = range weights {
+		prop += w
+		if r < prop {
+			break
+		}
+	}
+	planets := make([]*Planet, 0)
+	for i := 0; i < n; i++ {
+		pName := fmt.Sprintf("%s-%d", sName, i+1)
+		planets = append(planets, NewPlanet(pName, sType))
+	}
 	return &StellarSystem{
 		StarType:  sType,
 		StarColor: StarColorMap[sType],
-		Planets:   make([]string, 0),
-		StarName:  c.GetStarName(),
+		Planets:   planets,
+		StarName:  sName,
 	}
 }
 
@@ -68,4 +57,12 @@ func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 	vector.DrawFilledCircle(
 		screen, float32(cx), float32(cy), float32(r),
 		s.StarColor, false)
+}
+
+func (s *StellarSystem) PlanetNames() []string {
+	names := make([]string, len(s.Planets))
+	for i, p := range s.Planets {
+		names[i] = p.planetName
+	}
+	return names
 }

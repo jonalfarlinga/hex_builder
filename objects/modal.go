@@ -25,6 +25,8 @@ type Modal struct {
 	activeSubmodal *Modal
 }
 
+var _ c.Interactable = (*Modal)(nil)
+
 func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
 	m := &Modal{
 		Components: comp,
@@ -76,20 +78,23 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 			screen, posx, posy, float32(dimx), float32(dimy),
 			3, c.BGColor, true)
 	}
+	if m.activeSubmodal != nil {
+		m.activeSubmodal.Draw(screen)
+	}
 }
 
 func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	click := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 
 	if m.activeSubmodal != nil {
-		action, payload, err := m.activeSubmodal.Update(x,y)
+		action, payload, err := m.activeSubmodal.Update(x, y)
 		if err != nil {
 			return c.ActionNone, nil, fmt.Errorf("submodal update: %s", err)
 		} else if action == c.ActionCloseModal {
 			m.activeSubmodal = nil
 			return c.ActionNone, nil, nil
 		} else {
-			return action, payload, nil
+			return m.handleModalAction(action, payload)
 		}
 	}
 	for _, comp := range m.Components {
@@ -105,6 +110,9 @@ func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 }
 
 func (m *Modal) Collide(x, y int) bool {
+	if m.activeSubmodal != nil && m.activeSubmodal.Collide(x,y) {
+		return true
+	}
 	fx, fy := float32(x), float32(y)
 	if fx > m.x && fx < m.x+m.width &&
 		fy > m.y && fy < m.y+m.height {
@@ -132,6 +140,8 @@ func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIA
 			}
 		}
 		return c.ActionCloseModal, nil, nil
+	case c.ActionDeleteSystemRequest:
+		m.activeSubmodal = BuildConfirmModal("Do you want to delete the system?", c.ActionDeleteSystemForced, payload)
 	default:
 		return action, payload, nil
 	}

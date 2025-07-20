@@ -14,6 +14,7 @@ var BGColor color.Color
 var GridColor color.RGBA
 var TextColor color.Color
 var TextBoxColor color.RGBA
+var TransparentColor color.RGBA
 var ModalColor color.RGBA
 var ButtonColor color.RGBA
 var ButtonHover color.RGBA
@@ -24,6 +25,7 @@ func InitColor() {
 	BGColor = color.Black
 	GridColor = color.RGBA{100, 100, 100, 255}
 	TextColor = color.White
+	TransparentColor = color.RGBA{0, 0, 0, 0}
 	TextBoxColor = color.RGBA{75, 75, 75, 255}
 	ModalColor = color.RGBA{0, 50, 200, 200}
 	ButtonColor = color.RGBA{180, 180, 0, 200}

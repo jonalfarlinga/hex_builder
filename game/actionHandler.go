@@ -15,7 +15,7 @@ func (g *Game) actionUpdate(action c.UIAction, payload c.UIPayload) {
 		g.activeModal = nil
 	case c.ActionRandomCluster:
 		g.grid.Randomize(0.2)
-	case c.ActionDeleteSystem:
+	case c.ActionDeleteSystemForced:
 		p, ok := payload.([2]int)
 		if !ok {
 			panic(fmt.Errorf("bad payload in DeleteSystem"))

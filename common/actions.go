@@ -11,6 +11,7 @@ const (
 	ActionRandomCluster
 	ActionSelectPrev
 	ActionSelectNext
-	ActionDeleteSystem
+	ActionDeleteSystemRequest
+	ActionDeleteSystemForced
 	ActionClearCluster
 )
