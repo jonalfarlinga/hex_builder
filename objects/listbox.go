@@ -24,7 +24,7 @@ func NewListBox(title string, listitems []string, x, y, width, height float32) *
 	h := c.TextFace16.Metrics().CapHeight
 	items := make([]*Label, 0)
 	for _, item := range listitems {
-		l := NewLabel(item, 0, 0, float32(h), width-7-7)
+		l := NewLabel(item, 0, 0, width-7-7, float32(h))
 		items = append(items, l)
 	}
 	return &ListBox{

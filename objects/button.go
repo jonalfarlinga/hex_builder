@@ -24,7 +24,7 @@ var _ Component = (*Button)(nil)
 var _ c.Interactable = (*Button)(nil)
 
 func NewButton(
-	text string, action c.UIAction, x, y int, height, width float32,
+	text string, action c.UIAction, x, y int, width, height float32,
 ) *Button {
 	return &Button{
 		x:          x,

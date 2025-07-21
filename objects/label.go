@@ -17,7 +17,7 @@ type Label struct {
 var _ Component = (*Label)(nil)
 var _ c.Interactable = (*Label)(nil)
 
-func NewLabel(defaulttext string, x, y, height, width float32) *Label {
+func NewLabel(defaulttext string, x, y, width, height float32) *Label {
 	return &Label{
 		Text:   defaulttext,
 		x:      x,

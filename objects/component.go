@@ -23,4 +23,5 @@ const (
 	ComponentSelectBox string = "select"
 	ComponentLabel     string = "label"
 	ComponentListBox   string = "listbox"
+	ComponentContainer string = "container"
 )

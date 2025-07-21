@@ -27,7 +27,7 @@ type Modal struct {
 
 var _ c.Interactable = (*Modal)(nil)
 
-func NewModal(x, y float32, height, width float32, comp []Component) *Modal {
+func NewModal(x, y float32, width, height float32, comp []Component) *Modal {
 	m := &Modal{
 		Components: comp,
 		x:          x,

@@ -20,7 +20,7 @@ type SelectBox struct {
 var _ Component = (*SelectBox)(nil)
 var _ c.Interactable = (*SelectBox)(nil)
 
-func NewSelectBox(ops []string, sel int, x, y, height, width float32) *SelectBox {
+func NewSelectBox(ops []string, sel int, x, y, width, height float32) *SelectBox {
 	p := NewButton(
 		"<", c.ActionSelectPrev, 0, 0, height-2, height-2,
 	)

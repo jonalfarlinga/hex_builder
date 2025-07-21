@@ -4,7 +4,9 @@ import (
 	"fmt"
 	c "hex_builder/common"
 	"image/color"
+	"math"
 	"math/rand"
+	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -30,6 +32,7 @@ func NewStellarSystem() *StellarSystem {
 		}
 	}
 	sName := c.GetStarName()
+	sName = fmt.Sprintf("%s%s", strings.ToUpper(sName[:1]), sName[1:])
 	r = rand.Float32()
 	weights = PlanetDistributions[sType]
 	var w float32
@@ -57,6 +60,20 @@ func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 	vector.DrawFilledCircle(
 		screen, float32(cx), float32(cy), float32(r),
 		s.StarColor, false)
+
+	planetRadius := r * 0.3
+	orbitRadius := r * 1.5
+	n := len(s.Planets)
+	if n > 6 {
+		n = 6
+	}
+	for i := 0; i < n; i++ {
+		angle := 2 * math.Pi * float64(i) / float64(n)
+		px := cx + orbitRadius*math.Cos(angle)
+		py := cy + orbitRadius*math.Sin(angle)
+		p := s.Planets[i]
+		vector.DrawFilledCircle(screen, float32(px), float32(py), float32(planetRadius), p.planetColor, false)
+	}
 }
 
 func (s *StellarSystem) PlanetNames() []string {

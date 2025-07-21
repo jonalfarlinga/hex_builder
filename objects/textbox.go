@@ -21,7 +21,7 @@ type TextBox struct {
 var _ Component = (*TextBox)(nil)
 var _ c.Interactable = (*TextBox)(nil)
 
-func NewTextBox(defaultText string, x, y, height, width float32) *TextBox {
+func NewTextBox(defaultText string, x, y, width, height float32) *TextBox {
 	return &TextBox{
 		Text:   defaultText,
 		x:      x,
