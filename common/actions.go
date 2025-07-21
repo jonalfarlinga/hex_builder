@@ -7,11 +7,31 @@ const (
 	ActionNone UIAction = iota
 	ActionClose
 	ActionCloseModal
-	ActionFocus
+	ActionResetModal
+	ActionFocusOn
 	ActionRandomCluster
+	ActionClearCluster
 	ActionSelectPrev
 	ActionSelectNext
+	ActionSelectPlanetModal
 	ActionDeleteSystemRequest
+	ActionDeletePlanetRequest
 	ActionDeleteSystemForced
-	ActionClearCluster
+	ActionDeletePlanetForced
 )
+
+var ActionMap map[UIAction]string = map[UIAction]string{
+	ActionNone:                "ActionNone",
+	ActionClose:               "ActionClose",
+	ActionCloseModal:          "ActionCloseModal",
+	ActionFocusOn:             "ActionFocus",
+	ActionRandomCluster:       "ActionRandomCluster",
+	ActionSelectPrev:          "ActionSelectPrev",
+	ActionSelectNext:          "ActionSelectNext",
+	ActionDeleteSystemRequest: "ActionDeleteSystemRequest",
+	ActionDeletePlanetRequest: "ActionDeletePlanetRequest",
+	ActionDeleteSystemForced:  "ActionDeleteSystemForced",
+	ActionDeletePlanetForced:  "ActionDeletePlanetForced",
+	ActionClearCluster:        "ActionClearCluster",
+	ActionSelectPlanetModal:   "ActionSelectPlanetModal",
+}

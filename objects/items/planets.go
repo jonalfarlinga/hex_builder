@@ -6,9 +6,9 @@ import (
 )
 
 type Planet struct {
-	planetClass string
+	Class       string
 	planetColor color.Color
-	planetName  string
+	Name        string
 }
 
 func NewPlanet(name string, starType string) *Planet {
@@ -25,8 +25,8 @@ func NewPlanet(name string, starType string) *Planet {
 	}
 	class := PlanetTypes[pc]
 	return &Planet{
-		planetClass: class,
+		Class:       class,
 		planetColor: PlanetColorMap[class],
-		planetName:  name,
+		Name:        name,
 	}
 }

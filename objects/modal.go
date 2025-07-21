@@ -92,7 +92,7 @@ func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 			return c.ActionNone, nil, fmt.Errorf("submodal update: %s", err)
 		} else if action == c.ActionCloseModal {
 			m.activeSubmodal = nil
-			return c.ActionNone, nil, nil
+			return c.ActionResetModal, m.content, nil
 		} else {
 			return m.handleModalAction(action, payload)
 		}
@@ -110,7 +110,7 @@ func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 }
 
 func (m *Modal) Collide(x, y int) bool {
-	if m.activeSubmodal != nil && m.activeSubmodal.Collide(x,y) {
+	if m.activeSubmodal != nil && m.activeSubmodal.Collide(x, y) {
 		return true
 	}
 	fx, fy := float32(x), float32(y)
@@ -123,7 +123,7 @@ func (m *Modal) Collide(x, y int) bool {
 
 func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIAction, c.UIPayload, error) {
 	switch action {
-	case c.ActionFocus:
+	case c.ActionFocusOn:
 		if target, ok := payload.(Component); ok {
 			if m.focus != nil && m.focus.GetID() == target.GetID() {
 				m.focus = nil
@@ -134,14 +134,53 @@ func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIA
 			return c.ActionNone, nil, fmt.Errorf("not a Component")
 		}
 	case c.ActionCloseModal:
-		if system, ok := m.content.(*items.StellarSystem); ok {
-			if err := m.updateSystemContent(system); err != nil {
+		fmt.Printf("%+v\n", m.content)
+		if _, ok := m.content.(*items.Planet); ok {
+			if sel, ok := payload.(int); ok {
+				if err := m.updatePlanetContent(sel); err != nil {
+					return c.ActionNone, nil, fmt.Errorf("failed to update Planets: %w", err)
+				}
+			} else {
+				return c.ActionNone, nil, fmt.Errorf("failed to update Planets - bad payload %v", payload)
+			}
+			return c.ActionResetModal, m.content, nil
+		} else if _, ok := m.content.(*items.StellarSystem); ok {
+			if err := m.updateSystemContent(); err != nil {
 				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %w", err)
 			}
 		}
-		return c.ActionCloseModal, nil, nil
+		return action, payload, nil
+	case c.ActionResetModal:
+		if _, ok := m.content.(*items.StellarSystem); ok {
+			if err := m.updateSystemContent(); err != nil {
+				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %w", err)
+			}
+		}
 	case c.ActionDeleteSystemRequest:
 		m.activeSubmodal = BuildConfirmModal("Do you want to delete the system?", c.ActionDeleteSystemForced, payload)
+	case c.ActionDeletePlanetRequest:
+		m.activeSubmodal = BuildConfirmModal("Do you want to delete the planet?", c.ActionDeletePlanetForced, payload)
+	case c.ActionSelectPlanetModal:
+		sel, ok := payload.([2]int)
+		if !ok {
+			return c.ActionNone, nil, fmt.Errorf("bad payload for ActionSelectPlanetModal")
+		}
+		fmt.Printf("action: %s, payload: %v \n", c.ActionMap[action], payload)
+		if _, ok := m.content.([]*items.Planet); ok {
+			fmt.Printf("update planet\n")
+			if err := m.updatePlanetContent(sel[0]); err != nil {
+				return c.ActionNone, nil, fmt.Errorf("failed to update Planets: %s", err)
+			}
+			return action, payload, nil
+		} else if content, ok := m.content.(*items.StellarSystem); ok {
+			fmt.Printf("update system\n")
+			m.activeSubmodal = BuildPlanetsModal(content.Planets, sel[1])
+		}
+		if _, ok := m.content.(*items.StellarSystem); ok {
+			if err := m.updateSystemContent(); err != nil {
+				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %w", err)
+			}
+		}
 	default:
 		return action, payload, nil
 	}

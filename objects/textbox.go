@@ -52,7 +52,7 @@ func (t *TextBox) Draw(screen *ebiten.Image) {
 func (t *TextBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	click := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 	if click {
-		return c.ActionFocus, t, nil
+		return c.ActionFocusOn, t, nil
 	}
 	if !prevBackPressed && ebiten.IsKeyPressed(ebiten.KeyBackspace) && len(t.Text) > 0 {
 		t.Text = t.Text[:len(t.Text)-1]

@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"fmt"
 	c "hex_builder/common"
 	"image/color"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type Button struct {
-	id int
+	id            int
 	x, y, xR, yB  int
 	height, width float32
 	text          string
@@ -37,7 +38,7 @@ func NewButton(
 		hoverBG:    c.ButtonHover,
 		text:       text,
 		action:     action,
-		id: c.ComponentIDS.Next(),
+		id:         c.ComponentIDS.Next(),
 	}
 }
 
@@ -66,15 +67,16 @@ func (b *Button) Draw(screen *ebiten.Image) {
 	)
 	var opts = c.CenterTextOpts
 	opts.GeoM.Reset()
-    opts.GeoM.Translate(
-        float64(b.x)+float64(b.width)/2,
-        float64(b.y)+float64(b.height)/2,
-    )
-    text.Draw(screen, b.text, c.TextFace24, opts)
+	opts.GeoM.Translate(
+		float64(b.x)+float64(b.width)/2,
+		float64(b.y)+float64(b.height)/2,
+	)
+	text.Draw(screen, b.text, c.TextFace24, opts)
 }
 
 func (b *Button) Update(x, y int) (c.UIAction, c.UIPayload, error) {
-	if b.Collide(x,y) {
+	if b.Collide(x, y) {
+		fmt.Printf("clicked %d: payload - %v\n", b.action, b.payload)
 		return b.action, b.payload, nil
 	}
 	return c.ActionNone, nil, nil

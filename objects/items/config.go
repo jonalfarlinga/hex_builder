@@ -19,12 +19,12 @@ var StarTypes [5]string = [5]string{
 }
 
 const (
-	Mclass string = "M"
-	Hclass string = "H"
-	Kclass string = "K"
-	Dclass string = "D"
-	Tclass string = "T"
-	Yclass string = "Y"
+	Mclass string = "M-class"
+	Hclass string = "H-class"
+	Kclass string = "K-class"
+	Dclass string = "D-class"
+	Tclass string = "T-class"
+	Yclass string = "Y-class"
 )
 
 var PlanetTypes = [6]string{

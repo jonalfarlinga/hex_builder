@@ -79,7 +79,7 @@ func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 func (s *StellarSystem) PlanetNames() []string {
 	names := make([]string, len(s.Planets))
 	for i, p := range s.Planets {
-		names[i] = p.planetName
+		names[i] = p.Name
 	}
 	return names
 }
