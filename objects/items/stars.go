@@ -13,10 +13,10 @@ import (
 )
 
 type StellarSystem struct {
-	StarType  string
-	StarColor color.Color
-	Planets   []*Planet
-	StarName  string
+	StarType  string      `toml:"type"`
+	StarColor color.Color `toml:"color"`
+	Planets   []*Planet   `toml:"planets"`
+	StarName  string      `toml:"name"`
 }
 
 func NewStellarSystem() *StellarSystem {

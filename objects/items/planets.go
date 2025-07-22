@@ -6,9 +6,9 @@ import (
 )
 
 type Planet struct {
-	Class       string
-	planetColor color.Color
-	Name        string
+	Class       string      `toml:"class"`
+	planetColor color.Color `toml:"class"`
+	Name        string      `toml:"class"`
 }
 
 func NewPlanet(name string, starType string) *Planet {

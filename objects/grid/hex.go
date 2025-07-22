@@ -10,8 +10,8 @@ import (
 )
 
 type HexTile struct {
-	q, r   int
-	system *items.StellarSystem
+	q, r   int `toml:"coords"`
+	system *items.StellarSystem `toml:"system"`
 }
 
 func NewHexTile(q, r int) *HexTile {

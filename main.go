@@ -1,9 +1,11 @@
 package main
 
 import (
+	"hex_builder/assets"
 	c "hex_builder/common"
 	"hex_builder/game"
 	"hex_builder/objects"
+	"image"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -14,6 +16,7 @@ func main() {
 	ebiten.SetWindowSize(int(c.ScreenWidth), int(c.ScreenHeight))
 	ebiten.SetWindowTitle("Hexagon Builder")
 	gameObject := game.NewGame(menuButtons())
+	ebiten.SetWindowIcon([]image.Image{assets.WindowIcon})
 	if err := ebiten.RunGame(gameObject); err != nil {
 		log.Fatal(err)
 	}
