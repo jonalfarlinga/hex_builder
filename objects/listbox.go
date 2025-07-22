@@ -74,6 +74,10 @@ func (l *ListBox) Dimensions() (int, int) {
 func (l *ListBox) SetPos(x, y float32) {
 	l.x = x
 	l.y = y
+	l.LayoutComponents()
+}
+
+func (l *ListBox) LayoutComponents() {
 	h := float32(c.TextFace16.Metrics().CapHeight + 3)
 	var cursorX, cursorY float32 = 7, h + 7 + 3
 	for _, label := range l.Items {
@@ -97,4 +101,15 @@ func (l *ListBox) GetComponentType() string {
 
 func (l *ListBox) Pos() (float32, float32) {
 	return l.x, l.y
+}
+
+func (l *ListBox) SetItems(listitems []string) {
+	h := c.TextFace16.Metrics().CapHeight
+	items := make([]*Label, 0)
+	for _, item := range listitems {
+		l := NewLabel(item, 0, 0, l.width-7-7, float32(h))
+		items = append(items, l)
+	}
+	l.Items = items
+	l.LayoutComponents()
 }

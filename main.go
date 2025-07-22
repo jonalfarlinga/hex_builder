@@ -22,7 +22,7 @@ func main() {
 func menuButtons() []*objects.Button {
 	buttons := make([]*objects.Button, 0)
 	buttons = append(buttons, objects.NewButton(
-		"X", c.ActionClose,
+		"X", c.ActionCloseApp,
 		c.ScreenWidth-100, 50, 50, 50,
 	))
 	buttons = append(buttons, objects.NewButton(

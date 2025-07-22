@@ -9,7 +9,7 @@ import (
 
 func (g *Game) actionUpdate(action c.UIAction, payload c.UIPayload) {
 	switch action {
-	case c.ActionClose:
+	case c.ActionCloseApp:
 		os.Exit(0)
 	case c.ActionCloseModal:
 		// serialize modal
@@ -32,6 +32,6 @@ func (g *Game) actionUpdate(action c.UIAction, payload c.UIPayload) {
 		q, r := g.grid.SelectedHex.Coords()
 		g.activeModal = objects.BuildSystemModal(sys, q, r)
 	default:
-		fmt.Printf("unhandled action at game level - %d %v", action, payload)
+		fmt.Printf("unhandled action at Game level - %d %v", action, payload)
 	}
 }

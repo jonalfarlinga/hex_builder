@@ -49,10 +49,10 @@ func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
 	bd := NewButton(
 		"Delete", c.ActionDeleteSystemRequest,
 		0, 0, 100, 50)
-	bc := NewButton(
-		"Close", c.ActionCloseModal,
-		0, 0, 100, 50)
 	bd.SetPayload([2]int{q, r})
+	bc := NewButton(
+		"Close", c.ActionCloseThis,
+		0, 0, 100, 50)
 	spacing := float32(c.ScreenHeight / 100)
 	components[buttonContainer] = NewContainer(
 		2, []Component{bp, bd, bc}, spacing,
@@ -102,7 +102,7 @@ func BuildConfirmModal(query string, pendingAction c.UIAction, payload c.UIPaylo
 	b.SetPayload(payload)
 	components[yesButton] = b
 	components[noButton] = NewButton(
-		"No", c.ActionCloseModal,
+		"No", c.ActionCloseThis,
 		0, 0, 100, 50)
 	return NewModal(
 		float32(c.ScreenWidth)/2-200, float32(c.ScreenHeight)/2-100,
@@ -159,9 +159,9 @@ func BuildPlanetsModal(planets []*items.Planet, currentPlanet int) *Modal {
 		items.PlanetTypes[:], sel, 0, 0, 200, 50)
 	// Component 4
 	bc := NewButton(
-		"Close", c.ActionCloseModal,
+		"Close", c.ActionCloseThis,
 		0, 0, 100, 50)
-	bc.SetPayload(currentPlanet)
+	bc.SetPayload([]int{currentPlanet, nextPlanet})
 	bd := NewButton(
 		"Delete", c.ActionDeletePlanetRequest,
 		0, 0, 100, 50)
@@ -185,7 +185,7 @@ func (m *Modal) updatePlanetContent(sel int) error {
 	}
 	if planets, ok := m.content.([]*items.Planet); ok {
 		p := planets[sel]
-		p.Class = pClass.Value()
+		p.SetClass(pClass.Value())
 		p.Name = pName.Text
 	}
 	return nil

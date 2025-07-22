@@ -90,12 +90,8 @@ func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 		action, payload, err := m.activeSubmodal.Update(x, y)
 		if err != nil {
 			return c.ActionNone, nil, fmt.Errorf("submodal update: %s", err)
-		} else if action == c.ActionCloseModal {
-			m.activeSubmodal = nil
-			return c.ActionResetModal, m.content, nil
-		} else {
-			return m.handleModalAction(action, payload)
 		}
+		return m.handleModalAction(action, payload)
 	}
 	for _, comp := range m.Components {
 		if (click && comp.Collide(x, y)) || (!click && m.focus != nil && m.focus.GetID() == comp.GetID()) {
@@ -133,23 +129,27 @@ func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIA
 		} else {
 			return c.ActionNone, nil, fmt.Errorf("not a Component")
 		}
-	case c.ActionCloseModal:
-		fmt.Printf("%+v\n", m.content)
-		if _, ok := m.content.(*items.Planet); ok {
-			if sel, ok := payload.(int); ok {
-				if err := m.updatePlanetContent(sel); err != nil {
+	case c.ActionCloseThis:
+		if _, ok := m.content.([]*items.Planet); ok {
+			if sel, ok := payload.([]int); ok {
+				if err := m.updatePlanetContent(sel[0]); err != nil {
 					return c.ActionNone, nil, fmt.Errorf("failed to update Planets: %w", err)
 				}
 			} else {
 				return c.ActionNone, nil, fmt.Errorf("failed to update Planets - bad payload %v", payload)
 			}
-			return c.ActionResetModal, m.content, nil
 		} else if _, ok := m.content.(*items.StellarSystem); ok {
 			if err := m.updateSystemContent(); err != nil {
 				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %w", err)
 			}
 		}
-		return action, payload, nil
+		return c.ActionCloseModal, payload, nil
+	case c.ActionCloseModal:
+		m.activeSubmodal = nil
+		if system, ok := m.content.(*items.StellarSystem); ok {
+			m.Components[planetsList].(*ListBox).SetItems(system.PlanetNames())
+		}
+		return c.ActionNone, nil, nil
 	case c.ActionResetModal:
 		if _, ok := m.content.(*items.StellarSystem); ok {
 			if err := m.updateSystemContent(); err != nil {
@@ -165,15 +165,12 @@ func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIA
 		if !ok {
 			return c.ActionNone, nil, fmt.Errorf("bad payload for ActionSelectPlanetModal")
 		}
-		fmt.Printf("action: %s, payload: %v \n", c.ActionMap[action], payload)
 		if _, ok := m.content.([]*items.Planet); ok {
-			fmt.Printf("update planet\n")
 			if err := m.updatePlanetContent(sel[0]); err != nil {
 				return c.ActionNone, nil, fmt.Errorf("failed to update Planets: %s", err)
 			}
 			return action, payload, nil
 		} else if content, ok := m.content.(*items.StellarSystem); ok {
-			fmt.Printf("update system\n")
 			m.activeSubmodal = BuildPlanetsModal(content.Planets, sel[1])
 		}
 		if _, ok := m.content.(*items.StellarSystem); ok {

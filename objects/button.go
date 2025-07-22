@@ -1,7 +1,6 @@
 package objects
 
 import (
-	"fmt"
 	c "hex_builder/common"
 	"image/color"
 
@@ -76,7 +75,6 @@ func (b *Button) Draw(screen *ebiten.Image) {
 
 func (b *Button) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	if b.Collide(x, y) {
-		fmt.Printf("clicked %d: payload - %v\n", b.action, b.payload)
 		return b.action, b.payload, nil
 	}
 	return c.ActionNone, nil, nil

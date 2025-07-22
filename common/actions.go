@@ -5,8 +5,9 @@ type UIPayload interface{}
 
 const (
 	ActionNone UIAction = iota
-	ActionClose
+	ActionCloseApp
 	ActionCloseModal
+	ActionCloseThis
 	ActionResetModal
 	ActionFocusOn
 	ActionRandomCluster
@@ -22,8 +23,9 @@ const (
 
 var ActionMap map[UIAction]string = map[UIAction]string{
 	ActionNone:                "ActionNone",
-	ActionClose:               "ActionClose",
+	ActionCloseApp:            "ActionCloseApp",
 	ActionCloseModal:          "ActionCloseModal",
+	ActionCloseThis:           "ActionCloseThis",
 	ActionFocusOn:             "ActionFocus",
 	ActionRandomCluster:       "ActionRandomCluster",
 	ActionSelectPrev:          "ActionSelectPrev",
