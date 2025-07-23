@@ -173,6 +173,17 @@ func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIA
 		m.activeSubmodal = BuildConfirmModal("Do you want to delete the system?", c.ActionDeleteSystemForced, payload)
 	case c.ActionDeletePlanetRequest:
 		m.activeSubmodal = BuildConfirmModal("Do you want to delete the planet?", c.ActionDeletePlanetForced, payload)
+	case c.ActionDeletePlanetForced:
+		if planets, ok := m.content.([]*items.Planet); ok {
+			if d, ok := payload.(int); ok {
+				newPlanets := make([]*items.Planet, 0)
+				newPlanets = append(newPlanets, planets[:d]...)
+				newPlanets = append(newPlanets, planets[d+1:]...)
+				m.content = newPlanets
+				return c.ActionSelectPlanetModal, [2]int{d, d+1}, nil
+			}
+		}
+		return action, payload, nil
 	case c.ActionSelectPlanetModal:
 		sel, ok := payload.([2]int)
 		if !ok {

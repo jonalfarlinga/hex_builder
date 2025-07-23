@@ -31,6 +31,6 @@ func (g *Game) actionUpdate(action c.UIAction, payload c.UIPayload) {
 		q, r := g.grid.SelectedHex.Coords()
 		g.activeModal = objects.BuildSystemModal(sys, q, r)
 	default:
-		fmt.Printf("unhandled action at Game level - %d %v", action, payload)
+		fmt.Printf("unhandled action at Game level - %d %v\n", action, payload)
 	}
 }
