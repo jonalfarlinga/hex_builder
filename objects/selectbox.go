@@ -21,12 +21,8 @@ var _ Component = (*SelectBox)(nil)
 var _ c.Interactable = (*SelectBox)(nil)
 
 func NewSelectBox(ops []string, sel int, x, y, width, height float32) *SelectBox {
-	p := NewButton(
-		"<", c.ActionSelectPrev, 0, 0, height-2, height-2,
-	)
-	n := NewButton(
-		">", c.ActionSelectNext, 0, 0, height-2, height-2,
-	)
+	p := NewButton("<", c.ActionSelectPrev, height-2, height-2)
+	n := NewButton(">", c.ActionSelectNext, height-2, height-2)
 	return &SelectBox{
 		Options:   ops,
 		x:         x,
@@ -43,6 +39,7 @@ func NewSelectBox(ops []string, sel int, x, y, width, height float32) *SelectBox
 func (s *SelectBox) GetID() int {
 	return s.id
 }
+
 func (s *SelectBox) Value() string {
 	return s.Options[s.selection]
 }

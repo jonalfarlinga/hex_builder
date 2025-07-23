@@ -24,18 +24,18 @@ func main() {
 
 func menuButtons() []*objects.Button {
 	buttons := make([]*objects.Button, 0)
-	buttons = append(buttons, objects.NewButton(
-		"X", c.ActionCloseApp,
-		c.ScreenWidth-100, 50, 50, 50,
-	))
-	buttons = append(buttons, objects.NewButton(
-		"Randomize", c.ActionRandomCluster,
-		c.ScreenWidth-200, c.ScreenHeight-100, 150, 50,
-	))
-	buttons = append(buttons, objects.NewButton(
-		"Clear", c.ActionClearCluster,
-		c.ScreenWidth-400, c.ScreenHeight-100, 150, 50,
-	))
+	btn := objects.NewButton("X", c.ActionCloseApp, 50, 50)
+	btn.SetPos(float32(c.ScreenWidth)-100, 50)
+	buttons = append(buttons, btn)
+
+	btn = objects.NewButton("Randomize", c.ActionRandomCluster, 150, 50)
+	btn.SetPos(float32(c.ScreenWidth-200), float32(c.ScreenHeight-100))
+	buttons = append(buttons, btn)
+
+	btn = objects.NewButton("Clear", c.ActionClearCluster, 150, 50)
+	btn.SetPos(float32(c.ScreenWidth-400), float32(c.ScreenHeight-100))
+	buttons = append(buttons, btn)
+
 	return buttons
 }
 
