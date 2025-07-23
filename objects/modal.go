@@ -27,17 +27,27 @@ type Modal struct {
 
 var _ c.Interactable = (*Modal)(nil)
 
-func NewModal(x, y float32, width, height float32, comp []Component) *Modal {
+func NewModal(x, y float32, components []Component) *Modal {
+	padding:= float32(c.ScreenHeight / 100)
+	spacing:= float32(c.ScreenHeight / 100)
+	var maxW, sumH float32
+	for _, comp := range components {
+		w,h := comp.Dimensions()
+		maxW = max(maxW, float32(w))
+		sumH += float32(h) + spacing
+	}
+	maxW += padding * 2
+	sumH += padding * 2 - spacing
 	m := &Modal{
-		Components: comp,
+		Components: components,
 		x:          x,
 		y:          y,
-		height:     height,
-		width:      width,
-		Padding:    float32(c.ScreenHeight / 100),
-		Spacing:    float32(c.ScreenHeight / 100),
+		height:     sumH,
+		width:      maxW,
+		Padding:    padding,
+		Spacing:    spacing,
 		Active:     true,
-		image:      ebiten.NewImage(int(width), int(height)),
+		image:      ebiten.NewImage(int(maxW), int(sumH)),
 		id:         c.ComponentIDS.Next(),
 	}
 	m.LayoutComponents()
@@ -85,6 +95,9 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 
 func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	click := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+
+	// localX := x - int(m.x)
+	// localY := y - int(m.y)
 
 	if m.activeSubmodal != nil {
 		action, payload, err := m.activeSubmodal.Update(x, y)
