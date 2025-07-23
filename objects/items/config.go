@@ -25,15 +25,17 @@ const (
 	Dclass string = "D-class"
 	Tclass string = "T-class"
 	Yclass string = "Y-class"
+	Spacestation string = "Space Station"
 )
 
-var PlanetTypes = [6]string{
+var PlanetTypes = [7]string{
 	Mclass,
 	Hclass,
 	Kclass,
 	Dclass,
 	Tclass,
 	Yclass,
+	Spacestation,
 }
 
 var StarColorMap map[string]color.RGBA = map[string]color.RGBA{
@@ -45,12 +47,13 @@ var StarColorMap map[string]color.RGBA = map[string]color.RGBA{
 }
 
 var PlanetColorMap map[string]color.RGBA = map[string]color.RGBA{
-	Mclass: {25, 25, 255, 255},
-	Hclass: {175, 175, 50, 255},
-	Kclass: {50, 50, 200, 255},
-	Dclass: {200, 200, 200, 255},
-	Tclass: {230, 100, 200, 255},
-	Yclass: {230, 230, 0, 255},
+	Mclass:       {R: 34,  G: 139, B: 34,  A: 255},  // Forest green — life-supporting, Earth-like
+	Hclass:       {R: 255, G: 105, B: 180, A: 255},  // Hot pink — hostile and volcanic
+	Kclass:       {R: 210, G: 180, B: 140, A: 255},  // Tan — marginal habitability/desert
+	Dclass:       {R: 192, G: 192, B: 192, A: 255},  // Light gray — dead/asteroid-like
+	Tclass:       {R: 0,   G: 191, B: 255, A: 255},  // Deep sky blue — icy/gas giant
+	Yclass:       {R: 138, G: 43,  B: 226, A: 255},  // Blue-violet — demon class, exotic energy
+	Spacestation: {R: 169, G: 169, B: 169, A: 255},  // Dark gray — artificial structure
 }
 
 var PlanetDistributions = map[string][]float32{

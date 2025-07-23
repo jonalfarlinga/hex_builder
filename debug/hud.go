@@ -25,8 +25,8 @@ func DebugDraw(screen *ebiten.Image, vp *grid.Viewport) {
 
 	clicked := c.PrevClicked
 
-	h := c.TextFace24.Metrics().CapHeight
-	cursorY := h+3
+	h := c.TextFaceHeader.Metrics().CapHeight
+	cursorY := h + 3
 	var opts = c.LeftTextOpts
 	opts.GeoM.Reset()
 	opts.GeoM.Translate(2, h+2)
@@ -34,14 +34,14 @@ func DebugDraw(screen *ebiten.Image, vp *grid.Viewport) {
 	msgs := []string{
 		fmt.Sprintf("Screen: (%d, %d)\n", x, y),
 		fmt.Sprintf("World: (%.2f, %.2f)\n", wx, wy),
-		fmt.Sprintf("Hex: (q=%d, r=%d)\n", q,r),
+		fmt.Sprintf("Hex: (q=%d, r=%d)\n", q, r),
 		fmt.Sprintf("Window Offset: (%.2f, %.2f)\n", ox, oy),
 		fmt.Sprintf("Window Scale: %.2f\n", s),
 		fmt.Sprintf("FPS: %.2f\n", fps),
 		fmt.Sprintf("Clicked: %t\n", clicked),
 	}
 	for _, msg := range msgs {
-		text.Draw(screen, msg, c.TextFace24, opts)
+		text.Draw(screen, msg, c.TextFaceHeader, opts)
 		opts.GeoM.Translate(0, cursorY)
 	}
 }

@@ -11,7 +11,7 @@ import (
 
 type Button struct {
 	id            int
-	x, y, xR, yB  int
+	x, y          int
 	height, width float32
 	text          string
 	background    color.Color
@@ -29,8 +29,6 @@ func NewButton(
 	return &Button{
 		x:          x,
 		y:          y,
-		xR:         x + int(width),
-		yB:         y + int(height),
 		height:     height,
 		width:      width,
 		background: c.ButtonColor,
@@ -46,8 +44,8 @@ func (b *Button) GetID() int {
 }
 
 func (b *Button) Collide(x, y int) bool {
-	if x > b.x && x < b.xR &&
-		y > b.y && y < b.yB {
+	if x > b.x && x < b.x+int(b.width) &&
+		y > b.y && y < b.y+int(b.height) {
 		return true
 	}
 	return false
@@ -70,7 +68,7 @@ func (b *Button) Draw(screen *ebiten.Image) {
 		float64(b.x)+float64(b.width)/2,
 		float64(b.y)+float64(b.height)/2,
 	)
-	text.Draw(screen, b.text, c.TextFace24, opts)
+	text.Draw(screen, b.text, c.TextFaceHeader, opts)
 }
 
 func (b *Button) Update(x, y int) (c.UIAction, c.UIPayload, error) {
@@ -91,8 +89,6 @@ func (b *Button) GetComponentType() string {
 func (b *Button) SetPos(x, y float32) {
 	b.x = int(x)
 	b.y = int(y)
-	b.xR = b.x + int(b.width)
-	b.yB = b.y + int(b.height)
 }
 
 func (b *Button) Pos() (float32, float32) {

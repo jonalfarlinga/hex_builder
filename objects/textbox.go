@@ -46,7 +46,7 @@ func (t *TextBox) Draw(screen *ebiten.Image) {
 		float64(t.x+7),
 		float64(t.y)+float64(t.height)/2,
 	)
-	text.Draw(screen, t.Text, c.TextFace16, opts)
+	text.Draw(screen, t.Text, c.TextFaceNormal, opts)
 }
 
 func (t *TextBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {

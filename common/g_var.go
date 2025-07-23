@@ -33,8 +33,8 @@ func InitColor() {
 }
 
 var GenosFaceSource *text.GoTextFaceSource
-var TextFace24 *text.GoTextFace
-var TextFace16 *text.GoTextFace
+var TextFaceHeader *text.GoTextFace
+var TextFaceNormal *text.GoTextFace
 var CenterTextOpts *text.DrawOptions
 var LeftTextOpts *text.DrawOptions
 
@@ -45,10 +45,10 @@ func InitText() {
 	}
 	GenosFaceSource = f
 
-	TextFace24 = &text.GoTextFace{Source: GenosFaceSource, Size: 24} // customizable
-	TextFace24.SetVariation(text.MustParseTag("wght"), 400)
-	TextFace16 = &text.GoTextFace{Source: GenosFaceSource, Size: 16}
-	TextFace16.SetVariation(text.MustParseTag("wght"), 300)
+	TextFaceHeader = &text.GoTextFace{Source: GenosFaceSource, Size: 24} // customizable
+	TextFaceHeader.SetVariation(text.MustParseTag("wght"), 400)
+	TextFaceNormal = &text.GoTextFace{Source: GenosFaceSource, Size: 20}
+	TextFaceNormal.SetVariation(text.MustParseTag("wght"), 300)
 
 	CenterTextOpts = &text.DrawOptions{
 		LayoutOptions: text.LayoutOptions{

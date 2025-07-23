@@ -39,7 +39,7 @@ func (l *Label) Draw(screen *ebiten.Image) {
 		float64(l.x+7),
 		float64(l.y)+float64(l.height)/2,
 	)
-	text.Draw(screen, l.Text, c.TextFace16, opts)
+	text.Draw(screen, l.Text, c.TextFaceNormal, opts)
 }
 
 func (l *Label) Update(x, y int) (c.UIAction, c.UIPayload, error) {

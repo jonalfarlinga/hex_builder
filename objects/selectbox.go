@@ -59,7 +59,7 @@ func (s *SelectBox) Draw(screen *ebiten.Image) {
 		float64(s.x+2*s.height+7),
 		float64(s.y)+float64(s.height)/2,
 	)
-	text.Draw(screen, s.Options[s.selection], c.TextFace16, opts)
+	text.Draw(screen, s.Options[s.selection], c.TextFaceNormal, opts)
 }
 
 func (s *SelectBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {

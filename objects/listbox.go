@@ -21,7 +21,7 @@ var _ Component = (*ListBox)(nil)
 var _ c.Interactable = (*ListBox)(nil)
 
 func NewListBox(title string, listitems []string, x, y, width, height float32) *ListBox {
-	h := c.TextFace16.Metrics().CapHeight
+	h := c.TextFaceNormal.Metrics().CapHeight
 	items := make([]*Label, 0)
 	for _, item := range listitems {
 		l := NewLabel(item, 0, 0, width-7-7, float32(h))
@@ -45,11 +45,11 @@ func (l *ListBox) GetID() int {
 
 func (l *ListBox) Draw(screen *ebiten.Image) {
 	l.window.Fill(c.TransparentColor)
-	h := float64(c.TextFace24.Metrics().CapHeight)
+	h := float64(c.TextFaceHeader.Metrics().CapHeight)
 	var opts = c.LeftTextOpts
 	opts.GeoM.Reset()
 	opts.GeoM.Translate(7, h/2)
-	text.Draw(l.window, l.Title, c.TextFace24, opts)
+	text.Draw(l.window, l.Title, c.TextFaceHeader, opts)
 	vector.DrawFilledRect(
 		l.window, 7, float32(h)+7, l.width-7-7,
 		l.height-float32(h), c.TextBoxColor, false)
@@ -78,7 +78,7 @@ func (l *ListBox) SetPos(x, y float32) {
 }
 
 func (l *ListBox) LayoutComponents() {
-	h := float32(c.TextFace16.Metrics().CapHeight + 3)
+	h := float32(c.TextFaceNormal.Metrics().CapHeight + 3)
 	var cursorX, cursorY float32 = 7, h + 7 + 3
 	for _, label := range l.Items {
 		label.SetPos(cursorX, cursorY)
@@ -104,7 +104,7 @@ func (l *ListBox) Pos() (float32, float32) {
 }
 
 func (l *ListBox) SetItems(listitems []string) {
-	h := c.TextFace16.Metrics().CapHeight
+	h := c.TextFaceNormal.Metrics().CapHeight
 	items := make([]*Label, 0)
 	for _, item := range listitems {
 		l := NewLabel(item, 0, 0, l.width-7-7, float32(h))
