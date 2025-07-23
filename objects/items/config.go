@@ -39,11 +39,11 @@ var PlanetTypes = [7]string{
 }
 
 var StarColorMap map[string]color.RGBA = map[string]color.RGBA{
-	MainSequence: {255, 255, 60, 255},
-	RedGiant:     {248, 135, 0, 255},
-	WhiteDwarf:   {255, 255, 255, 255},
-	Neutron:      {100, 200, 245, 255},
-	RedDwarf:     {225, 0, 0, 255},
+	MainSequence: {R: 255, G: 255, B: 150, A: 255}, // Soft yellow-white (like our Sun)
+	RedGiant:     {R: 255, G: 69,  B: 0,   A: 255}, // Bright red-orange
+	WhiteDwarf:   {R: 220, G: 220, B: 255, A: 255}, // Pale bluish-white
+	Neutron:      {R: 100, G: 149, B: 237, A: 255}, // Medium blue (CornflowerBlue)
+	RedDwarf:     {R: 178, G: 34,  B: 34,  A: 255}, // Deep red (Firebrick)
 }
 
 var PlanetColorMap map[string]color.RGBA = map[string]color.RGBA{

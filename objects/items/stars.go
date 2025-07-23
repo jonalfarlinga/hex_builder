@@ -37,6 +37,7 @@ func NewStellarSystem() *StellarSystem {
 	weights = PlanetDistributions[sType]
 	var w float32
 	var n int
+	prop = 0
 	for n, w = range weights {
 		prop += w
 		if r < prop {

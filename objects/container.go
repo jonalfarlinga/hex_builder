@@ -17,7 +17,16 @@ type Container struct {
 
 var _ Component = (*Container)(nil)
 
-func NewContainer(cols int, components []Component, spacing, x, y, width, height float32) *Container {
+func NewContainer(cols int, components []Component, spacing, x, y float32) *Container {
+	var maxW, maxH float32
+	for _, comp := range components {
+		w, h := comp.Dimensions()
+		maxW = max(maxW, float32(w))
+		maxH = max(maxH, float32(h))
+	}
+	width := float32(cols)*(maxW+float32(spacing)) - spacing
+	rows := len(components)/cols + len(components)%2
+	height := float32(rows)*(maxH+float32(spacing)) - spacing
 	cont := &Container{
 		id:         c.ComponentIDS.Next(),
 		height:     height,
