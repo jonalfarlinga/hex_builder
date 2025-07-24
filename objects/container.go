@@ -59,9 +59,8 @@ func (r *Container) GetID() int {
 }
 
 func (r *Container) Update(x, y int) (c.UIAction, c.UIPayload, error) {
-	localX, localY := x-int(r.x), y-int(r.y)
 	for _, comp := range r.Components {
-		action, payload, err := comp.Update(localX, localY)
+		action, payload, err := comp.Update(x, y)
 		if err != nil {
 			return c.ActionNone, nil, err
 		}
@@ -74,13 +73,12 @@ func (r *Container) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 
 func (r *Container) Draw(screen *ebiten.Image) {
 	for _, comp := range r.Components {
-		comp.Draw(r.image)
+		comp.Draw(screen)
 	}
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(
 		float64(r.x), float64(r.y),
 	)
-	screen.DrawImage(r.image, opts)
 }
 
 func (r *Container) GetComponentType() string {
@@ -94,10 +92,11 @@ func (r *Container) Pos() (float32, float32) {
 func (r *Container) SetPos(x, y float32) {
 	r.x = x
 	r.y = y
+	r.LayoutComponents()
 }
 
 func (r *Container) LayoutComponents() {
-	var cursorX, cursorY float32
+	cursorX, cursorY := r.x, r.y
 	var col int
 	var mxH int
 	for _, comp := range r.Components {
@@ -107,7 +106,7 @@ func (r *Container) LayoutComponents() {
 		mxH = max(mxH, h)
 		if col >= r.columns {
 			col = 0
-			cursorX = 0
+			cursorX = r.x
 			cursorY += float32(mxH) + r.spacing
 		} else {
 			cursorX += float32(w) + r.spacing
