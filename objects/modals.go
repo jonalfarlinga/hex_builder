@@ -48,8 +48,7 @@ func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
 	bc := NewButton("Close", c.ActionCloseThis, 175, 50)
 	spacing := float32(c.ScreenHeight / 100)
 	components[buttonContainer] = NewContainer(
-		2, []Component{bp, bd, bc}, spacing,
-		0, 0)
+		2, []Component{bp, bd, bc}, spacing)
 
 	// Build
 	m := NewModal(100, 100, components)
@@ -133,7 +132,7 @@ func BuildPlanetsModal(planets []*items.Planet, currentPlanet int) *Modal {
 	bn.SetPayload([2]int{currentPlanet, nextPlanet})
 	spacing := float32(c.ScreenHeight / 100)
 	components[pSelectButtons] = NewContainer(
-		2, []Component{bp, bn}, spacing, 0, 0)
+		2, []Component{bp, bn}, spacing)
 	// Component 3
 	var sel int
 	for i, typ := range items.PlanetTypes {
@@ -150,7 +149,7 @@ func BuildPlanetsModal(planets []*items.Planet, currentPlanet int) *Modal {
 	bd := NewButton("Delete", c.ActionDeletePlanetRequest, 150, 50)
 	bd.SetPayload(currentPlanet)
 	components[controlButtons] = NewContainer(
-		2, []Component{bc, bd}, spacing, 0, 0)
+		2, []Component{bc, bd}, spacing)
 	m := NewModal(200, 200, components)
 	m.content = planets
 	return m

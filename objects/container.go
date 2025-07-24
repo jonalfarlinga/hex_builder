@@ -13,11 +13,12 @@ type Container struct {
 	columns       int
 	spacing       float32
 	Components    []Component
+	image         *ebiten.Image
 }
 
 var _ Component = (*Container)(nil)
 
-func NewContainer(cols int, components []Component, spacing, x, y float32) *Container {
+func NewContainer(cols int, components []Component, spacing float32) *Container {
 	var maxW, maxH float32
 	for _, comp := range components {
 		w, h := comp.Dimensions()
@@ -34,8 +35,9 @@ func NewContainer(cols int, components []Component, spacing, x, y float32) *Cont
 		columns:    cols,
 		Components: components,
 		spacing:    spacing,
+		image: ebiten.NewImage(int(width), int(height)),
 	}
-	cont.SetPos(x, y)
+	cont.LayoutComponents()
 	return cont
 }
 
@@ -57,8 +59,9 @@ func (r *Container) GetID() int {
 }
 
 func (r *Container) Update(x, y int) (c.UIAction, c.UIPayload, error) {
+	localX, localY := x-int(r.x), y-int(r.y)
 	for _, comp := range r.Components {
-		action, payload, err := comp.Update(x, y)
+		action, payload, err := comp.Update(localX, localY)
 		if err != nil {
 			return c.ActionNone, nil, err
 		}
@@ -71,8 +74,13 @@ func (r *Container) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 
 func (r *Container) Draw(screen *ebiten.Image) {
 	for _, comp := range r.Components {
-		comp.Draw(screen)
+		comp.Draw(r.image)
 	}
+	opts := &ebiten.DrawImageOptions{}
+	opts.GeoM.Translate(
+		float64(r.x), float64(r.y),
+	)
+	screen.DrawImage(r.image, opts)
 }
 
 func (r *Container) GetComponentType() string {
@@ -86,7 +94,10 @@ func (r *Container) Pos() (float32, float32) {
 func (r *Container) SetPos(x, y float32) {
 	r.x = x
 	r.y = y
-	cursorX, cursorY := x, y
+}
+
+func (r *Container) LayoutComponents() {
+	var cursorX, cursorY float32
 	var col int
 	var mxH int
 	for _, comp := range r.Components {
@@ -96,7 +107,7 @@ func (r *Container) SetPos(x, y float32) {
 		mxH = max(mxH, h)
 		if col >= r.columns {
 			col = 0
-			cursorX = x
+			cursorX = 0
 			cursorY += float32(mxH) + r.spacing
 		} else {
 			cursorX += float32(w) + r.spacing
