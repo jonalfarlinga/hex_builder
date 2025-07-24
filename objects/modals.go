@@ -56,16 +56,8 @@ func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
 	return m
 }
 
-func (m *Modal) updateSystemContent() error {
-	sys, ok := m.content.(*items.StellarSystem)
-	if !ok {
-		return fmt.Errorf("failed to update System - bad modal content")
-	}
-	if m.activeSubmodal != nil {
-		if p, ok := m.activeSubmodal.content.([]*items.Planet); ok {
-			sys.Planets = p
-		}
-	}
+func (m *Modal) updateSystemContent(
+	) error {
 	nameField, ok := m.Components[starName].(*TextBox)
 	if !ok {
 		return fmt.Errorf("modal field StarName is %T but expected TextBox", m.Components[starName])
@@ -73,6 +65,10 @@ func (m *Modal) updateSystemContent() error {
 	typeField, ok := m.Components[starType].(*SelectBox)
 	if !ok {
 		return fmt.Errorf("modal field StarName is %T but expected SelectBox", m.Components[starType])
+	}
+	sys, ok := m.content.(*items.StellarSystem)
+	if !ok {
+		return fmt.Errorf("failed to update System - bad modal content")
 	}
 	sys.StarName = nameField.Text
 	sys.StarType = typeField.Value()
@@ -113,11 +109,10 @@ func BuildPlanetsModal(planets []*items.Planet, currentPlanet int) *Modal {
 		return nil
 	}
 	prevPlanet := currentPlanet-1
+	nextPlanet := currentPlanet+1
 	if prevPlanet < 0 {
 		prevPlanet = len(planets)-1
-	}
-	nextPlanet := currentPlanet+1
-	if nextPlanet >= len(planets) {
+	} else if nextPlanet >= len(planets) {
 		nextPlanet = 0
 	}
 
@@ -165,7 +160,7 @@ func (m *Modal) updatePlanetContent(sel int) error {
 		return fmt.Errorf("modal field Planet.Class is %T but expected SelectBox", m.Components[starName])
 	}
 	if planets, ok := m.content.([]*items.Planet); ok {
-		p := *planets[sel]
+		p := planets[sel]
 		p.SetClass(pClass.Value())
 		p.Name = pName.Text
 	}
