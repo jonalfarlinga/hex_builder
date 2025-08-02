@@ -42,7 +42,7 @@ func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
 		0, 0, 300, 50)
 	// Component 5
 	bp := NewButton("Planets...", c.ActionSelectPlanetModal, 175, 50)
-	bp.SetPayload([2]int{0,0})
+	bp.SetPayload([2]int{0, 0})
 	bd := NewButton("Delete", c.ActionDeleteSystemRequest, 175, 50)
 	bd.SetPayload([2]int{q, r})
 	bc := NewButton("Close", c.ActionCloseThis, 175, 50)
@@ -112,11 +112,11 @@ func BuildPlanetsModal(planets []*items.Planet, currentPlanet int) *Modal {
 	if len(planets) == 0 {
 		return nil
 	}
-	prevPlanet := currentPlanet-1
+	prevPlanet := currentPlanet - 1
 	if prevPlanet < 0 {
-		prevPlanet = len(planets)-1
+		prevPlanet = len(planets) - 1
 	}
-	nextPlanet := currentPlanet+1
+	nextPlanet := currentPlanet + 1
 	if nextPlanet >= len(planets) {
 		nextPlanet = 0
 	}

@@ -32,5 +32,6 @@ func NewPlanet(name string, starType string) *Planet {
 }
 
 func (p *Planet) SetClass(class string) {
+	p.Class = class
 	p.planetColor = PlanetColorMap[class]
 }
