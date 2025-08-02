@@ -96,7 +96,7 @@ func (l *ListBox) Collide(x, y int) bool {
 }
 
 func (l *ListBox) GetComponentType() string {
-	return ComponentListBox
+	return ComponentListBoxType
 }
 
 func (l *ListBox) Pos() (float32, float32) {

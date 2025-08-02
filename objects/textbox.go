@@ -87,7 +87,7 @@ func (t *TextBox) Collide(x, y int) bool {
 }
 
 func (t *TextBox) GetComponentType() string {
-	return ComponentTextBox
+	return ComponentTextBoxType
 }
 
 func (t *TextBox) Pos() (float32, float32) {

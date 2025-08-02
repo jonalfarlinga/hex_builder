@@ -13,7 +13,6 @@ type Container struct {
 	columns       int
 	spacing       float32
 	Components    []Component
-	image         *ebiten.Image
 }
 
 var _ Component = (*Container)(nil)
@@ -35,7 +34,6 @@ func NewContainer(cols int, components []Component, spacing float32) *Container 
 		columns:    cols,
 		Components: components,
 		spacing:    spacing,
-		image: ebiten.NewImage(int(width), int(height)),
 	}
 	cont.LayoutComponents()
 	return cont
@@ -82,7 +80,7 @@ func (r *Container) Draw(screen *ebiten.Image) {
 }
 
 func (r *Container) GetComponentType() string {
-	return ComponentContainer
+	return ComponentContainerType
 }
 
 func (r *Container) Pos() (float32, float32) {

@@ -65,7 +65,7 @@ func (l *Label) Collide(x, y int) bool {
 }
 
 func (l *Label) GetComponentType() string {
-	return ComponentLabel
+	return ComponentLabelType
 }
 
 func (l *Label) Pos() (float32, float32) {

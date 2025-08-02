@@ -20,7 +20,6 @@ type Modal struct {
 	Padding        float32
 	Spacing        float32
 	Active         bool
-	image          *ebiten.Image
 	content        interface{}
 	activeSubmodal *Modal
 }
@@ -47,7 +46,6 @@ func NewModal(x, y float32, components []Component) *Modal {
 		Padding:    padding,
 		Spacing:    spacing,
 		Active:     true,
-		image:      ebiten.NewImage(int(maxW), int(sumH)),
 		id:         c.ComponentIDS.Next(),
 	}
 	m.LayoutComponents()

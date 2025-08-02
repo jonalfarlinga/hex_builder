@@ -104,7 +104,7 @@ func (s *SelectBox) Collide(x, y int) bool {
 }
 
 func (s *SelectBox) GetComponentType() string {
-	return ComponentSelectBox
+	return ComponentSelectBoxType
 }
 
 func (s *SelectBox) Pos() (float32, float32) {

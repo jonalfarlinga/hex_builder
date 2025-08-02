@@ -81,7 +81,7 @@ func (b *Button) Dimensions() (int, int) {
 }
 
 func (b *Button) GetComponentType() string {
-	return ComponentButton
+	return ComponentButtonType
 }
 
 func (b *Button) SetPos(x, y float32) {

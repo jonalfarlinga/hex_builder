@@ -18,10 +18,10 @@ type Component interface {
 }
 
 const (
-	ComponentTextBox   string = "textbox"
-	ComponentButton    string = "button"
-	ComponentSelectBox string = "select"
-	ComponentLabel     string = "label"
-	ComponentListBox   string = "listbox"
-	ComponentContainer string = "container"
+	ComponentTextBoxType   string = "textbox"
+	ComponentButtonType    string = "button"
+	ComponentSelectBoxType string = "select"
+	ComponentLabelType     string = "label"
+	ComponentListBoxType   string = "listbox"
+	ComponentContainerType string = "container"
 )
