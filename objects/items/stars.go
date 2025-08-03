@@ -58,10 +58,12 @@ func NewStellarSystem() *StellarSystem {
 }
 
 func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
+	// Draw the star
 	vector.DrawFilledCircle(
 		screen, float32(cx), float32(cy), float32(r),
 		s.StarColor, false)
 
+	// Draw up to six planets surrounding the star
 	planetRadius := r * 0.3
 	orbitRadius := r * 1.5
 	n := len(s.Planets)
@@ -73,7 +75,8 @@ func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 		px := cx + orbitRadius*math.Cos(angle)
 		py := cy + orbitRadius*math.Sin(angle)
 		p := s.Planets[i]
-		vector.DrawFilledCircle(screen, float32(px), float32(py), float32(planetRadius), p.planetColor, false)
+		planetColor := PlanetColorMap[p.Class]
+		vector.DrawFilledCircle(screen, float32(px), float32(py), float32(planetRadius), planetColor, false)
 	}
 }
 

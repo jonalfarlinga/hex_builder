@@ -1,14 +1,12 @@
 package items
 
 import (
-	"image/color"
 	"math/rand"
 )
 
 type Planet struct {
-	Class       string      `toml:"class"`
-	planetColor color.Color `toml:"class"`
-	Name        string      `toml:"class"`
+	Class string `toml:"class"`
+	Name  string `toml:"class"`
 }
 
 func NewPlanet(name string, starType string) *Planet {
@@ -26,12 +24,10 @@ func NewPlanet(name string, starType string) *Planet {
 	class := PlanetTypes[pc]
 	return &Planet{
 		Class:       class,
-		planetColor: PlanetColorMap[class],
 		Name:        name,
 	}
 }
 
 func (p *Planet) SetClass(class string) {
 	p.Class = class
-	p.planetColor = PlanetColorMap[class]
 }
