@@ -11,7 +11,9 @@ const (
 	ActionResetModal
 	ActionFocusOn
 	ActionRandomCluster
+	ActionRandomClusterRequest
 	ActionClearCluster
+	ActionClearClusterRequest
 	ActionSelectPrev
 	ActionSelectNext
 	ActionSelectPlanetModal
@@ -22,18 +24,20 @@ const (
 )
 
 var ActionMap map[UIAction]string = map[UIAction]string{
-	ActionNone:                "ActionNone",
-	ActionCloseApp:            "ActionCloseApp",
-	ActionCloseModal:          "ActionCloseModal",
-	ActionCloseThis:           "ActionCloseThis",
-	ActionFocusOn:             "ActionFocus",
-	ActionRandomCluster:       "ActionRandomCluster",
-	ActionSelectPrev:          "ActionSelectPrev",
-	ActionSelectNext:          "ActionSelectNext",
-	ActionDeleteSystemRequest: "ActionDeleteSystemRequest",
-	ActionDeletePlanetRequest: "ActionDeletePlanetRequest",
-	ActionDeleteSystemForced:  "ActionDeleteSystemForced",
-	ActionDeletePlanetForced:  "ActionDeletePlanetForced",
-	ActionClearCluster:        "ActionClearCluster",
-	ActionSelectPlanetModal:   "ActionSelectPlanetModal",
+	ActionNone:                 "ActionNone",
+	ActionCloseApp:             "ActionCloseApp",
+	ActionCloseModal:           "ActionCloseModal",
+	ActionCloseThis:            "ActionCloseThis",
+	ActionFocusOn:              "ActionFocus",
+	ActionRandomCluster:        "ActionRandomCluster",
+	ActionRandomClusterRequest: "ActionRandomClusterRequest",
+	ActionSelectPrev:           "ActionSelectPrev",
+	ActionSelectNext:           "ActionSelectNext",
+	ActionDeleteSystemRequest:  "ActionDeleteSystemRequest",
+	ActionDeletePlanetRequest:  "ActionDeletePlanetRequest",
+	ActionDeleteSystemForced:   "ActionDeleteSystemForced",
+	ActionDeletePlanetForced:   "ActionDeletePlanetForced",
+	ActionClearCluster:         "ActionClearCluster",
+	ActionClearClusterRequest:  "ActionClearClusterRequest",
+	ActionSelectPlanetModal:    "ActionSelectPlanetModal",
 }

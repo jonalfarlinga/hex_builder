@@ -94,9 +94,6 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	click := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 
-	// localX := x - int(m.x)
-	// localY := y - int(m.y)
-
 	if m.activeSubmodal != nil {
 		action, payload, err := m.activeSubmodal.Update(x, y)
 		if err != nil {
