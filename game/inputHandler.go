@@ -32,6 +32,9 @@ func (g *Game) inputUpdate(x, y int) error {
 		}
 		if clicked {
 			for _, button := range g.buttons {
+				if !button.Collide(x, y) {
+					continue
+				}
 				action, payload, err := button.Update(x, y)
 				if err != nil {
 					return fmt.Errorf("button clicked %v: %s", button, err)

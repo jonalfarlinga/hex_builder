@@ -14,15 +14,15 @@ type Viewport struct {
 
 func NewViewport() *Viewport {
 	return &Viewport{
-		OffsetX: float64(c.ScreenWidth / 2),
-		OffsetY: float64(c.ScreenHeight / 2),
+		OffsetX: float64(c.ScreenWidth() / 2),
+		OffsetY: float64(c.ScreenHeight() / 2),
 		Scale:   60,
 		stroke:  Stroke{},
 	}
 }
 
 func (vp *Viewport) Draw(hg *HexGrid, dst *ebiten.Image) {
-	
+
 }
 
 func (vp *Viewport) Update() error {

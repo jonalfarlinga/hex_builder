@@ -27,8 +27,8 @@ type Modal struct {
 var _ c.Interactable = (*Modal)(nil)
 
 func NewModal(x, y float32, components []Component) *Modal {
-	padding:= float32(c.ScreenHeight / 100)
-	spacing:= float32(c.ScreenHeight / 100)
+	padding:= float32(c.ScreenHeight() / 100)
+	spacing:= float32(c.ScreenHeight() / 100)
 	var maxW, sumH float32
 	for _, comp := range components {
 		w,h := comp.Dimensions()

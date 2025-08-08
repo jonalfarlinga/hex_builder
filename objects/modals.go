@@ -46,7 +46,7 @@ func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
 	bd := NewButton("Delete", c.ActionDeleteSystemRequest, 175, 50)
 	bd.SetPayload([2]int{q, r})
 	bc := NewButton("Close", c.ActionCloseThis, 175, 50)
-	spacing := float32(c.ScreenHeight / 100)
+	spacing := float32(c.ScreenHeight() / 100)
 	components[buttonContainer] = NewContainer(
 		2, []Component{bp, bd, bc}, spacing)
 
@@ -96,7 +96,7 @@ func BuildConfirmModal(query string, pendingAction c.UIAction, payload c.UIPaylo
 	components[yesButton] = b
 	components[noButton] = NewButton("No", c.ActionCloseThis, 100, 50)
 	return NewModal(
-		float32(c.ScreenWidth)/2-200, float32(c.ScreenHeight)/2-100, components,
+		float32(c.ScreenWidth())/2-200, float32(c.ScreenHeight())/2-100, components,
 	)
 }
 
@@ -130,7 +130,7 @@ func BuildPlanetsModal(planets []*items.Planet, currentPlanet int) *Modal {
 	bp.SetPayload([2]int{currentPlanet, prevPlanet})
 	bn := NewButton("Next", c.ActionSelectPlanetModal, 150, 50)
 	bn.SetPayload([2]int{currentPlanet, nextPlanet})
-	spacing := float32(c.ScreenHeight / 100)
+	spacing := float32(c.ScreenHeight() / 100)
 	components[pSelectButtons] = NewContainer(
 		2, []Component{bp, bn}, spacing)
 	// Component 3

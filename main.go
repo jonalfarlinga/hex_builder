@@ -13,7 +13,10 @@ import (
 
 func main() {
 	initGlobal()
-	ebiten.SetWindowSize(int(c.ScreenWidth), int(c.ScreenHeight))
+	// Get display size and update screen constants
+	mw, mh := ebiten.Monitor().Size()
+	c.SetScreenSize(mw, mh)
+	ebiten.SetFullscreen(true)
 	ebiten.SetWindowTitle("Hexagon Builder")
 	gameObject := game.NewGame(menuButtons())
 	ebiten.SetWindowIcon([]image.Image{assets.WindowIcon})
@@ -25,15 +28,15 @@ func main() {
 func menuButtons() []*objects.Button {
 	buttons := make([]*objects.Button, 0)
 	btn := objects.NewButton("X", c.ActionCloseThis, 50, 50)
-	btn.SetPos(float32(c.ScreenWidth)-100, 50)
+	btn.SetPos(float32(c.ScreenWidth())-100, 50)
 	buttons = append(buttons, btn)
 
 	btn = objects.NewButton("Randomize", c.ActionRandomClusterRequest, 150, 50)
-	btn.SetPos(float32(c.ScreenWidth-200), float32(c.ScreenHeight-100))
+	btn.SetPos(float32(c.ScreenWidth())-200, float32(c.ScreenHeight())-100)
 	buttons = append(buttons, btn)
 
 	btn = objects.NewButton("Clear", c.ActionClearClusterRequest, 150, 50)
-	btn.SetPos(float32(c.ScreenWidth-400), float32(c.ScreenHeight-100))
+	btn.SetPos(float32(c.ScreenWidth())-400, float32(c.ScreenHeight())-100)
 	buttons = append(buttons, btn)
 
 	return buttons

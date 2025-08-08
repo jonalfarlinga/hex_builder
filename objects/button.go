@@ -70,10 +70,10 @@ func (b *Button) Draw(screen *ebiten.Image) {
 }
 
 func (b *Button) Update(x, y int) (c.UIAction, c.UIPayload, error) {
-	if b.Collide(x, y) {
+	// if b.Collide(x, y) {
 		return b.action, b.payload, nil
-	}
-	return c.ActionNone, nil, nil
+	// }
+	// return c.ActionNone, nil, nil
 }
 
 func (b *Button) Dimensions() (int, int) {
