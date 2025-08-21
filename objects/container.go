@@ -58,6 +58,9 @@ func (r *Container) GetID() int {
 
 func (r *Container) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	for _, comp := range r.Components {
+		if !comp.Collide(x, y) {
+			continue
+		}
 		action, payload, err := comp.Update(x, y)
 		if err != nil {
 			return c.ActionNone, nil, err

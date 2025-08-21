@@ -67,9 +67,9 @@ func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 	planetRadius := r * 0.3
 	orbitRadius := r * 1.5
 	n := len(s.Planets)
-	if n > 6 {
-		n = 6
-	}
+	// if n > 6 {
+	// 	n = 6
+	// }
 	for i := 0; i < n; i++ {
 		angle := 2 * math.Pi * float64(i) / float64(n)
 		px := cx + orbitRadius*math.Cos(angle)
@@ -86,4 +86,22 @@ func (s *StellarSystem) PlanetNames() []string {
 		names[i] = p.Name
 	}
 	return names
+}
+
+func (s *StellarSystem) DeletePlanet(index int) error {
+	if index < 0 || index >= len(s.Planets) {
+		return fmt.Errorf("planet index out of range")
+	}
+	if len(s.Planets) == 1 {
+		s.Planets = []*Planet{}
+		return nil
+	}
+	planets := make([]*Planet, 0)
+	for i, p := range s.Planets {
+		if i != index {
+			planets = append(planets, p)
+		}
+	}
+	s.Planets = planets
+	return nil
 }
