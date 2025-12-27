@@ -86,7 +86,7 @@ func (m *Modal) updateSystemContent() error {
 const (
 	ConfirmModalDefinitions int = iota - 1
 	confirmLabel
-	confirmButtonContainer  // yes and no
+	confirmButtonContainer // yes and no
 )
 
 func BuildConfirmModal(query string, pendingAction c.UIAction, payload c.UIPayload) *Modal {
