@@ -3,7 +3,6 @@ package objects
 import (
 	"fmt"
 	c "hex_builder/common"
-	"hex_builder/objects/items"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -27,16 +26,16 @@ type Modal struct {
 var _ c.Interactable = (*Modal)(nil)
 
 func NewModal(x, y float32, components []Component) *Modal {
-	padding:= float32(c.ScreenHeight() / 100)
-	spacing:= float32(c.ScreenHeight() / 100)
+	padding := float32(c.ScreenHeight() / 100)
+	spacing := float32(c.ScreenHeight() / 100)
 	var maxW, sumH float32
 	for _, comp := range components {
-		w,h := comp.Dimensions()
+		w, h := comp.Dimensions()
 		maxW = max(maxW, float32(w))
 		sumH += float32(h) + spacing
 	}
 	maxW += padding * 2
-	sumH += padding * 2 - spacing
+	sumH += padding*2 - spacing
 	m := &Modal{
 		Components: components,
 		x:          x,

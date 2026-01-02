@@ -77,26 +77,31 @@ func (m *Modal) updateSystemContent() error {
 	sys.StarName = nameField.Text
 	sys.StarType = typeField.Value()
 	sys.StarColor = items.StarColorMap[sys.StarType]
+	if listBox, ok := m.Components[planetsList].(*ListBox); ok {
+		listBox.SetItems(sys.PlanetNames())
+	}
 	return nil
 }
 
 const (
 	ConfirmModalDefinitions int = iota - 1
 	confirmLabel
-	yesButton
-	noButton
+	confirmButtonContainer // yes and no
 )
 
 func BuildConfirmModal(query string, pendingAction c.UIAction, payload c.UIPayload) *Modal {
-	components := make([]Component, 3)
+	components := make([]Component, 2)
 	components[confirmLabel] = NewLabel(
 		query, 0, 0, 380, 50)
-	b := NewButton("Yes", pendingAction, 100, 50)
-	b.SetPayload(payload)
-	components[yesButton] = b
-	components[noButton] = NewButton("No", c.ActionCloseThis, 100, 50)
+	yb := NewButton("Yes", pendingAction, 100, 50)
+	yb.SetPayload(payload)
+	nb := NewButton("No", c.ActionCloseThis, 100, 50)
+	components[confirmButtonContainer] = NewContainer(
+		2, []Component{yb, nb}, float32(c.ScreenHeight()/100))
 	return NewModal(
-		float32(c.ScreenWidth())/2-200, float32(c.ScreenHeight())/2-100, components,
+		float32(c.ScreenWidth())/2-200,
+		float32(c.ScreenHeight())/2-100,
+		components,
 	)
 }
 
@@ -162,7 +167,7 @@ func (m *Modal) updatePlanetContent(sel int) error {
 	}
 	pClass, ok := m.Components[selectClass].(*SelectBox)
 	if !ok {
-		return fmt.Errorf("modal field Planet.Class is %T but expected SelectBox", m.Components[starName])
+		return fmt.Errorf("modal field Planet.Class is %T but expected SelectBox", m.Components[selectClass])
 	}
 	if planets, ok := m.content.([]*items.Planet); ok {
 		p := planets[sel]

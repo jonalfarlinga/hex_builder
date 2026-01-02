@@ -9,6 +9,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
+const HexRadius float64 = 1
+var screenHeight int = 900
+var screenWidth int = 1280
+
 var WhitePixel = ebiten.NewImage(1, 1)
 var BGColor color.Color
 var GridColor color.RGBA
@@ -18,7 +22,14 @@ var TransparentColor color.RGBA
 var ModalColor color.RGBA
 var ButtonColor color.RGBA
 var ButtonHover color.RGBA
+
 var PrevClicked bool = false
+
+var GenosFaceSource *text.GoTextFaceSource
+var TextFaceHeader *text.GoTextFace
+var TextFaceNormal *text.GoTextFace
+var CenterTextOpts *text.DrawOptions
+var LeftTextOpts *text.DrawOptions
 
 func InitColor() {
 	WhitePixel.Fill(color.White)
@@ -31,12 +42,6 @@ func InitColor() {
 	ButtonColor = color.RGBA{180, 180, 0, 200}
 	ButtonHover = color.RGBA{210, 210, 0, 200}
 }
-
-var GenosFaceSource *text.GoTextFaceSource
-var TextFaceHeader *text.GoTextFace
-var TextFaceNormal *text.GoTextFace
-var CenterTextOpts *text.DrawOptions
-var LeftTextOpts *text.DrawOptions
 
 func InitText() {
 	f, err := text.NewGoTextFaceSource(bytes.NewReader(assets.TextFontBytes))
@@ -74,4 +79,17 @@ func InitText() {
 	LeftTextOpts.ColorScale.Reset()
 	LeftTextOpts.ColorScale.ScaleWithColor(TextColor)
 	LeftTextOpts.ColorScale.SetA(1.0)
+}
+
+func SetScreenSize(w, h int) {
+	screenWidth = w
+	screenHeight = h
+}
+
+func ScreenWidth() int {
+	return screenWidth
+}
+
+func ScreenHeight() int {
+	return screenHeight
 }
