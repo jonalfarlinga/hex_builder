@@ -94,20 +94,20 @@ func (m *Modal) Draw(screen *ebiten.Image) {
 func (m *Modal) Update(x, y int) (c.UIAction, c.UIPayload, error) {
 	click := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 
-	if m.activeSubmodal != nil {
-		action, payload, err := m.activeSubmodal.Update(x, y)
+	if m.activeSubmodal != nil {  // Submodal is active
+		action, payload, err := m.activeSubmodal.Update(x, y)  // Update Submodal
 		if err != nil {
 			return c.ActionNone, nil, fmt.Errorf("submodal update: %s", err)
 		}
-		return m.handleModalAction(action, payload)
+		return m.handleModalAction(action, payload)  // update state based on Submodal return
 	}
-	for _, comp := range m.Components {
+	for _, comp := range m.Components {  // Update Components
 		if (click && comp.Collide(x, y)) || (!click && m.focus != nil && m.focus.GetID() == comp.GetID()) {
-			action, payload, err := comp.Update(x, y)
+			action, payload, err := comp.Update(x, y)  // update Component
 			if err != nil {
 				return c.ActionNone, nil, fmt.Errorf("error updating %v: %s", m.focus, err)
 			}
-			return m.handleModalAction(action, payload)
+			return m.handleModalAction(action, payload)  // update state based on Component return
 		}
 	}
 	return c.ActionNone, nil, nil
@@ -125,34 +125,34 @@ func (m *Modal) Collide(x, y int) bool {
 	return false
 }
 
-func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIAction, c.UIPayload, error) {
-	switch action {
-	case c.ActionFocusOn:
-		if target, ok := payload.(Component); ok {
-			if m.focus != nil && m.focus.GetID() == target.GetID() {
-				m.focus = nil
-			} else {
-				m.focus = target
-			}
-		} else {
-			return c.ActionNone, nil, fmt.Errorf("not a Component")
-		}
-	case c.ActionCloseThis:
-		if _, ok := m.content.([]*items.Planet); ok {
-			if sel, ok := payload.([]int); ok {
-				if err := m.updatePlanetContent(sel[0]); err != nil {
-					return c.ActionNone, nil, fmt.Errorf("failed to update Planets: %w", err)
+	func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIAction, c.UIPayload, error) {
+		switch action {
+		case c.ActionFocusOn:
+			if target, ok := payload.(Component); ok {
+				if m.focus != nil && m.focus.GetID() == target.GetID() {
+					m.focus = nil
+				} else {
+					m.focus = target
 				}
 			} else {
-				return c.ActionNone, nil, fmt.Errorf("failed to update Planets - bad payload %v", payload)
+				return c.ActionNone, nil, fmt.Errorf("not a Component")
 			}
-		} else if _, ok := m.content.(*items.StellarSystem); ok {
-			if err := m.updateSystemContent(); err != nil {
-				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %w", err)
+		case c.ActionCloseThis:
+			if _, ok := m.content.([]*items.Planet); ok {
+				if sel, ok := payload.([]int); ok {
+					if err := m.updatePlanetContent(sel[0]); err != nil {
+						return c.ActionNone, nil, fmt.Errorf("failed to update Planets: %w", err)
+					}
+				} else {
+					return c.ActionNone, nil, fmt.Errorf("failed to update Planets - bad payload %v", payload)
+				}
+			} else if _, ok := m.content.(*items.StellarSystem); ok {
+				if err := m.updateSystemContent(); err != nil {
+					return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %w", err)
+				}
 			}
-		}
-		return c.ActionCloseModal, payload, nil
-	case c.ActionCloseModal:
+			return c.ActionCloseModal, payload, nil
+		case c.ActionCloseModal:
 		m.activeSubmodal = nil
 		if system, ok := m.content.(*items.StellarSystem); ok {
 			m.Components[planetsList].(*ListBox).SetItems(system.PlanetNames())
@@ -173,6 +173,7 @@ func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIA
 		if !ok {
 			return c.ActionNone, nil, fmt.Errorf("bad payload for ActionSelectPlanetModal")
 		}
+		fmt.Printf("Select Planet Modal for %v\n", sel)
 		if _, ok := m.content.([]*items.Planet); ok {
 			if err := m.updatePlanetContent(sel[0]); err != nil {
 				return c.ActionNone, nil, fmt.Errorf("failed to update Planets: %s", err)

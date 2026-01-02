@@ -12,16 +12,17 @@ var prevClicked *bool = &c.PrevClicked
 var prevSpacePressed bool = false
 
 func (g *Game) inputUpdate(x, y int) error {
-	clicked := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+	click := *prevClicked && !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
 	defer func() {*prevClicked = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)}()
 
-	if g.activeModal != nil && g.activeModal.Collide(x, y) {
-		action, payload, err := g.activeModal.Update(x, y)
+	if g.activeModal != nil && g.activeModal.Collide(x, y) {  // Modal is Active and cursor is inside modal
+		action, payload, err := g.activeModal.Update(x, y)  // Update Modal
 		if err != nil {
 			return fmt.Errorf("inputUpdate modal: %s", err)
 		}
-		g.actionUpdate(action, payload)
-	} else {
+		g.actionUpdate(action, payload)  // Update Game State based on Modal return
+	} else {  // outside/no modal
+		// Check for system modal open request
 		if !prevSpacePressed && ebiten.IsKeyPressed(ebiten.KeySpace) && g.grid.SelectedHex != nil {
 			if g.grid.SelectedHex.GetSystem() == nil {
 				g.grid.SelectedHex.NewSystem()
@@ -30,7 +31,8 @@ func (g *Game) inputUpdate(x, y int) error {
 			q, r := g.grid.SelectedHex.Coords()
 			g.activeModal = objects.BuildSystemModal(sys, q, r)
 		}
-		if clicked {
+		// Check buttons and grid clicks
+		if click {
 			for _, button := range g.buttons {
 				if !button.Collide(x, y) {
 					continue

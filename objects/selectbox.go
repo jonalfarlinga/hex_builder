@@ -60,24 +60,27 @@ func (s *SelectBox) Draw(screen *ebiten.Image) {
 }
 
 func (s *SelectBox) Update(x, y int) (c.UIAction, c.UIPayload, error) {
-	action, _, err := s.prev.Update(x, y)
-	if err != nil {
-		return c.ActionNone, nil, err
-	}
-	if action == c.ActionSelectPrev {
-		s.selection--
-		if s.selection < 0 {
-			s.selection = len(s.Options) - 1
+	if (s.prev.Collide(x, y)) {
+		action, _, err := s.prev.Update(x, y)
+		if err != nil {
+			return c.ActionNone, nil, err
 		}
-	}
-	action, _, err = s.next.Update(x, y)
-	if err != nil {
-		return c.ActionNone, nil, err
-	}
-	if action == c.ActionSelectNext {
-		s.selection++
-		if s.selection >= len(s.Options) {
-			s.selection = 0
+		if action == c.ActionSelectPrev {
+			s.selection--
+			if s.selection < 0 {
+				s.selection = len(s.Options) - 1
+			}
+		}
+	} else if (s.next.Collide(x, y)) {
+		action, _, err := s.next.Update(x, y)
+		if err != nil {
+			return c.ActionNone, nil, err
+		}
+		if action == c.ActionSelectNext {
+			s.selection++
+			if s.selection >= len(s.Options) {
+				s.selection = 0
+			}
 		}
 	}
 	return c.ActionNone, nil, nil
