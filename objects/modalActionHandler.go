@@ -45,6 +45,13 @@ func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIA
 				return c.ActionNone, nil, fmt.Errorf("failed to update StellarSystem: %w", err)
 			}
 		}
+	case c.ActionAddSatellite:
+		if system, ok := m.content.(*items.StellarSystem); ok {
+			system.AddPlanet()
+			m.activeSubmodal = BuildPlanetsModal(system.Planets, len(system.Planets)-1)
+			m.updateSystemContent()
+		}
+		return c.ActionNone, nil, nil
 	case c.ActionDeleteSystemRequest:
 		m.activeSubmodal = BuildConfirmModal("Do you want to delete the system?", c.ActionDeleteSystemForced, payload)
 	case c.ActionDeletePlanetRequest:

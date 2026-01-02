@@ -34,21 +34,22 @@ func BuildSystemModal(system *items.StellarSystem, q, r int) *Modal {
 		0, 0, 300, 50)
 	// Component 3
 	components[planetsList] = NewListBox(
-		"Planets", system.PlanetNames(),
+		"Satellites", system.PlanetNames(),
 		0, 0, 300, 200)
 	// Component 4
 	components[hexLocation] = NewLabel(
 		fmt.Sprintf("Location: Q: %d R: %d", q, r),
 		0, 0, 300, 50)
 	// Component 5
-	bp := NewButton("Planets...", c.ActionSelectPlanetModal, 175, 50)
-	bp.SetPayload([2]int{0, 0})
-	bd := NewButton("Delete", c.ActionDeleteSystemRequest, 175, 50)
-	bd.SetPayload([2]int{q, r})
-	bc := NewButton("Close", c.ActionCloseThis, 175, 50)
-	spacing := float32(c.ScreenHeight() / 100)
+		bp := NewButton("Satellites...", c.ActionSelectPlanetModal, 175, 50)
+		bp.SetPayload([2]int{0, 0})
+		bd := NewButton("Delete System", c.ActionDeleteSystemRequest, 175, 50)
+		bd.SetPayload([2]int{q, r})
+		bc := NewButton("Close", c.ActionCloseThis, 175, 50)
+		ba := NewButton("Add Satellite", c.ActionAddSatellite, 175, 50)
+		spacing := float32(c.ScreenHeight() / 100)
 	components[buttonContainer] = NewContainer(
-		2, []Component{bp, bd, bc}, spacing)
+		2, []Component{bp, bd, ba, bc}, spacing)
 
 	// Build
 	m := NewModal(100, 100, components)
@@ -93,9 +94,9 @@ func BuildConfirmModal(query string, pendingAction c.UIAction, payload c.UIPaylo
 	components := make([]Component, 2)
 	components[confirmLabel] = NewLabel(
 		query, 0, 0, 380, 50)
-	yb := NewButton("Yes", pendingAction, 100, 50)
-	yb.SetPayload(payload)
-	nb := NewButton("No", c.ActionCloseThis, 100, 50)
+		yb := NewButton("Yes", pendingAction, 100, 50)
+		yb.SetPayload(payload)
+		nb := NewButton("No", c.ActionCloseThis, 100, 50)
 	components[confirmButtonContainer] = NewContainer(
 		2, []Component{yb, nb}, float32(c.ScreenHeight()/100))
 	return NewModal(
@@ -131,11 +132,11 @@ func BuildPlanetsModal(planets []*items.Planet, currentPlanet int) *Modal {
 	components[planetName] = NewTextBox(
 		planets[currentPlanet].Name, 0, 0, 300, 50)
 	// Component 2
-	bp := NewButton("Previous", c.ActionSelectPlanetModal, 150, 50)
-	bp.SetPayload([2]int{currentPlanet, prevPlanet})
-	bn := NewButton("Next", c.ActionSelectPlanetModal, 150, 50)
-	bn.SetPayload([2]int{currentPlanet, nextPlanet})
-	spacing := float32(c.ScreenHeight() / 100)
+		bp := NewButton("Previous", c.ActionSelectPlanetModal, 150, 50)
+		bp.SetPayload([2]int{currentPlanet, prevPlanet})
+		bn := NewButton("Next", c.ActionSelectPlanetModal, 150, 50)
+		bn.SetPayload([2]int{currentPlanet, nextPlanet})
+		spacing := float32(c.ScreenHeight() / 100)
 	components[pSelectButtons] = NewContainer(
 		2, []Component{bp, bn}, spacing)
 	// Component 3
@@ -149,10 +150,10 @@ func BuildPlanetsModal(planets []*items.Planet, currentPlanet int) *Modal {
 	components[selectClass] = NewSelectBox(
 		items.PlanetTypes[:], sel, 0, 0, 300, 50)
 	// Component 4
-	bc := NewButton("Close", c.ActionCloseThis, 150, 50)
-	bc.SetPayload([]int{currentPlanet, nextPlanet})
-	bd := NewButton("Delete", c.ActionDeletePlanetRequest, 150, 50)
-	bd.SetPayload(currentPlanet)
+		bc := NewButton("Close", c.ActionCloseThis, 150, 50)
+		bc.SetPayload([]int{currentPlanet, nextPlanet})
+		bd := NewButton("Delete", c.ActionDeletePlanetRequest, 150, 50)
+		bd.SetPayload(currentPlanet)
 	components[controlButtons] = NewContainer(
 		2, []Component{bc, bd}, spacing)
 	m := NewModal(200, 200, components)

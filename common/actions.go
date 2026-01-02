@@ -16,6 +16,7 @@ const (
 	ActionClearClusterRequest
 	ActionSelectPrev
 	ActionSelectNext
+	ActionAddSatellite
 	ActionSelectPlanetModal
 	ActionDeleteSystemRequest
 	ActionDeletePlanetRequest
@@ -33,6 +34,7 @@ var ActionMap map[UIAction]string = map[UIAction]string{
 	ActionRandomClusterRequest: "ActionRandomClusterRequest",
 	ActionSelectPrev:           "ActionSelectPrev",
 	ActionSelectNext:           "ActionSelectNext",
+	ActionAddSatellite:         "ActionAddSatellite",
 	ActionDeleteSystemRequest:  "ActionDeleteSystemRequest",
 	ActionDeletePlanetRequest:  "ActionDeletePlanetRequest",
 	ActionDeleteSystemForced:   "ActionDeleteSystemForced",

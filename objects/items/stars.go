@@ -105,3 +105,8 @@ func (s *StellarSystem) DeletePlanet(index int) error {
 	s.Planets = planets
 	return nil
 }
+
+func (s *StellarSystem) AddPlanet() {
+	newPlanet := NewPlanet(fmt.Sprintf("%s-%d", s.StarName, len(s.Planets)+1), s.StarType)
+	s.Planets = append(s.Planets, newPlanet)
+}
