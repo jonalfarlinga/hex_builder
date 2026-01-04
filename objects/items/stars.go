@@ -10,6 +10,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
 type StellarSystem struct {
@@ -21,12 +22,12 @@ type StellarSystem struct {
 
 func NewStellarSystem() *StellarSystem {
 	r := rand.Float32()
-	weights := []float32{0.15, 0.02, 0.07, 0.01, 0.75}
-	var prop float32
+	weights := []float32{0.15, 0.02, 0.07, 0.01, 0.74, 0.1}
+	var prob float32
 	var sType string
 	for i, w := range weights {
-		prop += w
-		if r < prop {
+		prob += w
+		if r < prob {
 			sType = StarTypes[i]
 			break
 		}
@@ -36,16 +37,16 @@ func NewStellarSystem() *StellarSystem {
 	r = rand.Float32()
 	weights = PlanetDistributions[sType]
 	var w float32
-	var n int
-	prop = 0
-	for n, w = range weights {
-		prop += w
-		if r < prop {
+	var numPlanets int
+	prob = 0
+	for numPlanets, w = range weights {
+		prob += w
+		if r < prob {
 			break
 		}
 	}
 	planets := make([]*Planet, 0)
-	for i := 0; i < n; i++ {
+	for i := 0; i < numPlanets; i++ {
 		pName := fmt.Sprintf("%s-%d", sName, i+1)
 		planets = append(planets, NewPlanet(pName, sType))
 	}
@@ -57,7 +58,7 @@ func NewStellarSystem() *StellarSystem {
 	}
 }
 
-func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
+func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r, scale float64) {
 	// Draw the star
 	vector.DrawFilledCircle(
 		screen, float32(cx), float32(cy), float32(r),
@@ -67,9 +68,6 @@ func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 	planetRadius := r * 0.3
 	orbitRadius := r * 1.5
 	n := len(s.Planets)
-	// if n > 6 {
-	// 	n = 6
-	// }
 	for i := 0; i < n; i++ {
 		angle := 2 * math.Pi * float64(i) / float64(n)
 		px := cx + orbitRadius*math.Cos(angle)
@@ -78,6 +76,17 @@ func (s *StellarSystem) Draw(screen *ebiten.Image, cx, cy, r float64) {
 		planetColor := PlanetColorMap[p.Class]
 		vector.DrawFilledCircle(screen, float32(px), float32(py), float32(planetRadius), planetColor, false)
 	}
+
+	var opts = c.CenterTextOpts
+	opts.GeoM.Reset()
+	if scale < 40 {
+		return
+	}
+	opts.GeoM.Scale(scale/50, scale/50)
+	opts.GeoM.Translate(
+		cx-7, cy+r+15,
+	)
+	text.Draw(screen, s.StarName, c.TextFaceHeader, opts)
 }
 
 func (s *StellarSystem) PlanetNames() []string {

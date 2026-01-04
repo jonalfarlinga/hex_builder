@@ -62,6 +62,9 @@ func (m *Modal) handleModalAction(action c.UIAction, payload c.UIPayload) (c.UIA
 				if err := content.DeletePlanet(sel); err != nil {
 					return c.ActionNone, nil, fmt.Errorf("failed to delete planet from system: %w", err)
 				}
+				if sel >= len(content.Planets) {
+					sel = len(content.Planets) - 1
+				}
 				m.activeSubmodal = BuildPlanetsModal(content.Planets, sel)
 				m.updateSystemContent()
 				return c.ActionNone, nil, nil

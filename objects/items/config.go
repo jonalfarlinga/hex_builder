@@ -8,14 +8,16 @@ const (
 	WhiteDwarf   string = "White Dwarf"
 	Neutron      string = "Neutron"
 	RedDwarf     string = "Red Dwarf"
+	BlackHole    string = "Black Hole"
 )
 
-var StarTypes [5]string = [5]string{
+var StarTypes [6]string = [6]string{
 	MainSequence,
 	RedGiant,
 	WhiteDwarf,
 	Neutron,
 	RedDwarf,
+	BlackHole,
 }
 
 const (
@@ -44,6 +46,7 @@ var StarColorMap map[string]color.RGBA = map[string]color.RGBA{
 	WhiteDwarf:   {R: 220, G: 220, B: 255, A: 255}, // Pale bluish-white
 	Neutron:      {R: 100, G: 149, B: 237, A: 255}, // Medium blue (CornflowerBlue)
 	RedDwarf:     {R: 178, G: 34,  B: 34,  A: 255}, // Deep red (Firebrick)
+	BlackHole:    {R: 55,   G: 55,   B: 55,   A: 255}, // Black
 }
 
 var PlanetColorMap map[string]color.RGBA = map[string]color.RGBA{
@@ -62,6 +65,7 @@ var PlanetDistributions = map[string][]float32{
 	WhiteDwarf:   {0.4, 0.3, 0.15, 0.1, 0.03, 0.015, 0.005},
 	Neutron:      {0.8, 0.1, 0.05, 0.03, 0.01, 0.005, 0.005},
 	RedDwarf:     {0.1, 0.2, 0.3, 0.2, 0.1, 0.07, 0.03},
+	BlackHole:    {1.0, 0.0, 0.0, 0.00, 0.0, 0.0, 0.0},
 }
 
 var PlanetTypeDistributions = map[string][]float32{
@@ -70,4 +74,5 @@ var PlanetTypeDistributions = map[string][]float32{
 	WhiteDwarf:   {0.02, 0.08, 0.10, 0.30, 0.40, 0.10},
 	Neutron:      {0.01, 0.02, 0.05, 0.20, 0.50, 0.22},
 	RedDwarf:     {0.10, 0.15, 0.25, 0.25, 0.15, 0.10},
+	BlackHole:    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
 }

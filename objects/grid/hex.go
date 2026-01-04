@@ -31,7 +31,7 @@ func (h *HexTile) Pixel(vp *Viewport) (float64, float64) {
 	return x, y
 }
 
-func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport, selected bool) {
+func (h *HexTile) Draw(screen *ebiten.Image, vp *Viewport, selected bool) {
 	cx, cy := h.Pixel(vp)
 	size := c.HexRadius * vp.Scale
 	if cx+c.HexRadius < 0 || cx-c.HexRadius > float64(c.ScreenWidth()) ||
@@ -73,9 +73,9 @@ func (h *HexTile) Draw(dst *ebiten.Image, vp *Viewport, selected bool) {
 		vertices[i].ColorR = float32(c.GridColor.R) / 255
 	}
 
-	dst.DrawTriangles(vertices, indices, c.WhitePixel, nil)
+	screen.DrawTriangles(vertices, indices, c.WhitePixel, nil)
 	if h.system != nil {
-		h.system.Draw(dst, cx, cy, size*0.3)
+		h.system.Draw(screen, cx, cy, size*0.3, vp.Scale)
 	}
 }
 
